@@ -1,0 +1,56 @@
+<%- include('header.ejs'); -%>
+<div class = "wrapper">
+  <form action="/" method="post">
+     <div class="dishName">
+        <label>name</label>
+        <input type="text" name="name" required / autocomplete = "off">
+     </div>
+     <div class="dishRecipe">
+        <label>recipe</label>
+        <textarea name="recipe"30" rows="10" required></textarea>
+     </div>
+     <div class="dishIngredients">
+        <label>ingredients</label>
+        <input type="text" name="ingredients1" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients2" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients3" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients4" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients5" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients6" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients7" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients8" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients9" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients10" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients11" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients12" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients13" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients14" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients15" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients16" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients17" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients18" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients19" required / placeholder="Enter Ingredient" autocomplete="off">
+        <input type="text" name="ingredients20" required / placeholder="Enter Ingredient" autocomplete="off">
+        <a href = "#" id = test>add</a>
+     </div>
+     <div class="dishDescription">
+        <label>description</label>
+        <input type="text" name="description" / autocomplete="off">
+     </div>
+     <div class="dishTime">
+        <label>time to cook</label>
+        <input type="number" min="0" name="time" required / autocomplete = "off">
+     </div>
+     <div class = "nutritionalValue "> 
+        <label>Белки</label>
+        <input type="number" min="0" name="proteins" required / autocomplete = "off">
+        <label>Жиры</label>
+        <input type="number" min="0" name="fats" required / autocomplete = "off"> 
+        <label>Углеводы</label>
+        <input type="number" min="0" name="carbohydrates" required / autocomplete = "off">
+     </div>
+     <button type="submit">Add New Dish</button>
+  </form>
+</div>
+
+<%- include('footer.ejs'); -%>

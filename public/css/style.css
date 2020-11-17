@@ -1,0 +1,11 @@
+textarea {
+  resize: none;
+}
+.dishRecipe {
+}
+.dishIngredients {
+  visibility: hidden;
+}
+.dishIngredients a {
+    visibility:visible;
+}
