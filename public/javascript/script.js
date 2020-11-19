@@ -1,8 +1,8 @@
 
-var a = document.getElementsByClassName("ingredient")
+const a = document.getElementsByClassName("ingredient")
 
 
-//TODO Make input fields appear, dissapear and grayed out.
+//!Make input fields appear, dissapear and grayed out.
 for(let i = 0; i <a.length; ++i) {
     a[i].addEventListener("input",()=>{
        const value = a[i].value.trim();
@@ -41,7 +41,18 @@ for(let i = 0; i <a.length; ++i) {
      
     })
 }
-   //
+   //! Make fields enabled and make empty fields dissapear on post req 
+   document.getElementById("submit").addEventListener("mousedown",()=>{
+        for(let i = 0; i<20;++i){
+            if(a[i].value.trim().length)
+                a[i].disabled = false;
+            else{
+                a[i].disabled = true;
+            }
+        }
+        
+   })
+  
 
 
 
