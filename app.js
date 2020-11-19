@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -13,6 +15,8 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
+
 
 mongoose.connect("mongodb://localhost:27017/foodDB", {useNewUrlParser: true});
 
@@ -33,25 +37,30 @@ const dishSchema = {
 }
 
 const dish = mongoose.model("Dish", dishSchema);
-const ragu = new dish;
-ragu.name = "ragu";
-ragu.ingredients.push("myaso");
-ragu.ingredients.push("riba");
-ragu.description = "optional";
-ragu.nutritionalValue[0]=13;
-ragu.nutritionalValue[1]=12;
-ragu.nutritionalValue[2]=33;
-ragu.nutritionalValue[3]=4551;
-ragu.time = 4;
 
+const food = new dish 
 
 app.get("/",(req,res)=>{
     res.render("admin.ejs");
-    console.log(ragu)
-})
-app.post("/",(req,res)=>{
+    
     
 })
+app.post('/', function(req, res){
+    food.name = req.body.name;
+    food.recipe = req.body.recipe;
+    food.description = req.body.description;
+    food.time = req.body.time;
+    food.nutritionalValue.proteins = req.body.proteins;
+    food.nutritionalValue.fats = req.body.fats;
+    food.nutritionalValue.carbohydrates = req.body.carbohydrates;
+    food.nutritionalValue.calories=req.body.calories;
+    
+   console.log(req.body);
+ 
+    
+    // console.log(food);
+   
+});
 
 app.listen(port,()=>{
     console.log("Live");

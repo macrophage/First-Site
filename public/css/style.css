@@ -1,9 +1,7 @@
 textarea {
   resize: none;
 }
-.dishRecipe {
-}
-.dishIngredients {
+#dishIngredients {
   visibility: hidden;
 }
 .dishIngredients a {
