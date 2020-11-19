@@ -1,0 +1,16 @@
+<%- include('header.ejs'); -%>
+
+<p>Name: <%= test[0].name %></p>
+<p>Recipe: <%= test[0].recipe %></p>
+<p>Description: <%= test[0].descripion %></p>
+<p>Time: <%= test[0].time %></p>
+<p>Proteins: <%= test[0].nutritionalValue.proteins %></p>
+<p>Fats: <%= test[0].nutritionalValue.fats %></p>
+<p>Carbohydrates: <%= test[0].nutritionalValue.carbohydrates %></p>
+<p>Calories: <%= test[0].nutritionalValue.calories %></p>
+<p><%= test[0].ingredients[0] %></p>
+<p><%= test[0].ingredients[1] %></p>
+<p><%= test[0].ingredients[2] %></p>
+<p><%= test[0].ingredients[3] %></p>
+
+<%- include('footer.ejs'); -%>

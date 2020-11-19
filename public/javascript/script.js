@@ -42,6 +42,7 @@ for(let i = 0; i <a.length; ++i) {
     })
 }
    //! Make fields enabled and make empty fields dissapear on post req 
+   
    document.getElementById("submit").addEventListener("mousedown",()=>{
         for(let i = 0; i<20;++i){
             if(a[i].value.trim().length)
