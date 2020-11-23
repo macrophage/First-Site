@@ -9,7 +9,7 @@
         <label>recipe</label>
         <textarea name="recipe"30" rows="10" required></textarea>
      </div>
-      
+
      <div id="dishIngredients">
       
         <label>ingredients</label>
@@ -52,9 +52,25 @@
         <label>Fats</label>
         <input type="number" min="0" name="fats" required / autocomplete = "off"> 
         <label>Carbohydrates</label>
-        <input type="number" min="0" name="carbohydrates"  / autocomplete = "off">
+        <input type="number" min="0" name="carbohydrates" required / autocomplete = "off">
         <label>Calories</label>
         <input type="number" min="0" name="calories" required / autocomplete = "off">
+     </div>
+     <label>Is Sauce</label>
+     <input type="checkbox" id = "isSauce" name="isItSauce" value="true">
+     <input type="hidden" id = "isSauceHidden" name="isItSauce" value="false">
+
+     <select name="selectSauce" id = "sauceSelector">
+       <option>Choose Sauce</option>
+      <% sauceName.forEach(sauce => { %>
+            <option> <%= sauce.name %></option>
+      <% }); %>
+     </select>
+     
+     <div>
+       <ul id = "chosenSauce">
+         
+       </ul>
      </div>
      <button type="submit" id ="submit">Add New Dish</button>
   </form>

@@ -21,9 +21,25 @@ mongoose.connect("mongodb://localhost:27017/foodDB", {useNewUrlParser: true});
 const port = process.env.port || 3000;
 //! ********************************************************************************************* !\\
 
-let counter = 0;
+const sauceSchema = {
+    name: {type: String, required: true},
+    ingredients: [String],
+    // ingredients: [{
+    //     name: String,
+    //     amount: Number,
+    // }],
+    recipe: {type: String, required: true},
+    description: {type: String, required: false},
+    time: Number,
+    nutritionalValue: {
+        proteins: Number,
+        fats: Number,
+        carbohydrates: Number,
+        calories: Number
+    },
+    
 
-
+}
 
 const dishSchema = {
     name: { type: String, required: true },
@@ -36,41 +52,133 @@ const dishSchema = {
         fats: Number,
         carbohydrates: Number,
         calories: Number
-    }
+    },
 }
-const listSchema = {
-    items:[dishSchema]
+
+const advancedDishSchema = {
+    name: { type: String, required: true },
+    ingredients: [String],
+    recipe: {type: String, required: true},
+    description:{type:String,required: false},
+    time: Number,
+    nutritionalValue: {
+        proteins: Number,
+        fats: Number,
+        carbohydrates: Number,
+        calories: Number
+    },
+    contain: [sauceSchema],
+    
 }
+const advancedDish = mongoose.model("AdvancedDish", advancedDishSchema);
+const sauce = mongoose.model("Sauce", sauceSchema);
 const dish = mongoose.model("Dish", dishSchema);
-const list = mongoose.model("Item",listSchema);
-let dishArr = [];
+
 //! ********************************************************************************************* !\\
 
 
 app.get("/",(req,res)=>{
-    res.render("admin.ejs");
+    sauce.find((error,result)=>{
+        
+         res.render("admin",{sauceName:result})
+         advancedDish.find((error,result)=>{
+            console.log(result[2].contain[0]);
+        })  
+    })
     
     
 })
 app.post('/', function(req, res){
-    const update =  {
-        name: req.body.name,
-        recipe: req.body.recipe,
-        description: req.body.description,
-        time: req.body.time,
-        nutritionalValue:{
-            proteins: req.body.proteins,
-            fats: req.body.fats,
-            carbohydrates: req.body.carbohydrates,
-            calories: req.body.calories,
-        },
-        ingredients: req.body.ingredients
+   
+    if(req.body.isItSauce === "true"){
         
-    };
+        
+        const updateSauce =  {
+            name: req.body.name,
+            recipe: req.body.recipe,
+            description: req.body.description,
+            time: req.body.time,
+            nutritionalValue:{
+                carbohydrates: req.body.carbohydrates,
+                proteins: req.body.proteins,
+                fats: req.body.fats,
+                calories: req.body.calories,
+            },
+            ingredients: req.body.ingredients,
+        };
+        sauce.findOneAndUpdate({name:req.body.name},updateSauce,{upsert:true},(err,result)=>{
+                
+        })
+    }else{
+        
+        let sauceArr;
+        sauceArr = req.body.invisibleOptionInput;
+        const sauceQuantityArr = req.body.optionInput;
+        if(sauceArr === undefined){
+            const updateDish =  {
+                name: req.body.name,
+                recipe: req.body.recipe,
+                description: req.body.description,
+                time: req.body.time,
+                nutritionalValue:{
+                    proteins: req.body.proteins,
+                    fats: req.body.fats,
+                    carbohydrates: req.body.carbohydrates,
+                    calories: req.body.calories,
+                },
+                ingredients: req.body.ingredients,
+            };
+            dish.findOneAndUpdate({name:req.body.name},updateDish,{upsert:true},(err,result)=>{
+                    
+            })
+        } else{
+            const sauceArrOfObj = []
+            sauce.find((error,result)=>{
+            if(Array.isArray(sauceArr)){
+                
+                for(let i = 0; i<sauceArr.length; ++i){
+                    for(let k = 0; k < result.length; ++k){
+                        if(result[k].name === sauceArr[i]){
+                            sauceArrOfObj.push(result[k]) 
+                        } 
+                    }
+                }
+            }else{
+                for(let i = 0; i < result.length; ++i){
+                    if(result[i].name === sauceArr){
+                        sauceArrOfObj.push(result[i])
+                    }
+                }
+            }
+            const updateAdvancedDish =  {
+                name: req.body.name,
+                ingredients: req.body.ingredients,
+                recipe: req.body.recipe,
+                description: req.body.description,
+                time: req.body.time,
+                nutritionalValue:{
+                    proteins: req.body.proteins,
+                    fats: req.body.fats,
+                    carbohydrates: req.body.carbohydrates,
+                    calories: req.body.calories,
+                },
+                contain: sauceArrOfObj
+            };
+            advancedDish.findOneAndUpdate({name:req.body.name},updateAdvancedDish,{upsert:true},(err,result)=>{
+                
+            })
+               
+           })
+          
+            
+            
+        }
+       
+        
+    }
+   
     
-    dish.findOneAndUpdate({name:req.body.name},update,{upsert:true},(err,res)=>{
-        console.log(res);
-    })
+   
     
     
 res.redirect("/")
@@ -88,3 +196,6 @@ app.get("/test",(req,res)=>{
 app.listen(port,()=>{
     console.log("Live");
 })
+
+
+
