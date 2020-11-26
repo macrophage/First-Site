@@ -4,6 +4,11 @@ textarea {
 #dishIngredients {
   visibility: hidden;
 }
+#dishIngredients input:nth-child(-n+3) {
+  visibility: visible;
+  
+}
+
 .dishIngredients a {
     visibility:visible;
 }
