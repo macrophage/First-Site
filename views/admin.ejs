@@ -9,54 +9,10 @@
         <label>recipe</label>
         <textarea name="recipe"30" rows="10" required></textarea>
      </div>
-
-     <div id="dishIngredients">
-      
-        <label>ingredients</label>
-        
-        <input class = "ingredient"type="text" required / placeholder="Enter Ingredient" autocomplete="off" >
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off" required>
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-        <input class = "ingredient" type="text" / placeholder="Enter Ingredient" autocomplete="off">
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off">
-
-        
-
+     <input type="button" value = "Add" class = "addIngredient">
+     <div id="container">   
+        <input class = "ingredient"type="text" required / placeholder="Enter Ingredient" autocomplete="off"name = ingredient>
+        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off" required name = ingredientQuantity>
      </div>
      <div class="dishDescription">
         <label>description</label>
@@ -96,5 +52,5 @@
      <button type="submit" id ="submit">Add New Dish</button>
   </form>
 </div>
-
+<script src="javascript/Admin.js"></script>
 <%- include('footer.ejs'); -%>

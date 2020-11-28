@@ -1,0 +1,40 @@
+/** HEADER **/
+#mainHeader{
+  height: 50px;
+  width: 100%;
+  background-color:#202020;
+  margin-bottom: 2rem;
+}
+.navBar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  
+}
+
+.navBar ul li {
+  float: left;
+}
+
+.navBar ul li a {
+  display: block;
+  color: #DADADA;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.navBar ul li a:hover {
+  background-color: #111111;
+}
+
+
+
+
+body{
+  margin: 0;  
+}
+
+
+
+

@@ -23,11 +23,11 @@ const port = process.env.port || 3000;
 
 const sauceSchema = {
     name: {type: String, required: true},
-    ingredients: [String],
-    // ingredients: [{
-    //     name: String,
-    //     amount: Number,
-    // }],
+    
+    ingredients: {
+        name: [String],
+        amount: [Number],
+     },
     recipe: {type: String, required: true},
     description: {type: String, required: false},
     time: Number,
@@ -43,7 +43,10 @@ const sauceSchema = {
 
 const dishSchema = {
     name: { type: String, required: true },
-    ingredients: [String],
+    ingredients: {
+        name: [String],
+        amount: [Number],
+     },
     recipe: {type: String, required: true},
     description:{type:String,required: false},
     time: Number,
@@ -57,7 +60,10 @@ const dishSchema = {
 
 const advancedDishSchema = {
     name: { type: String, required: true },
-    ingredients: [String],
+    ingredients: {
+        name: [String],
+        amount: [Number],
+     },
     recipe: {type: String, required: true},
     description:{type:String,required: false},
     time: Number,
@@ -77,18 +83,40 @@ const dish = mongoose.model("Dish", dishSchema);
 //! ********************************************************************************************* !\\
 
 
-app.get("/",(req,res)=>{
-    sauce.find((error,result)=>{
+app.get("/admin",(req,res)=>{
+     sauce.find((error,result)=>{
         
-         res.render("admin",{sauceName:result})
-         advancedDish.find((error,result)=>{
-            console.log(result[2].contain[0]);
-        })  
+        res.render("admin",{sauceName:result})
+         dish.find((error,result)=>{
+            
+         })  
+     })
+    
+    
+})
+app.get("/test",(req,res)=>{
+    let i =0;
+     dish.find((err,resDish)=>{
+        advancedDish.find((err,resAdvanced)=>{
+            sauce.find((err,resSauce)=>{
+                res.render("test",{dish: resDish,advancedDish: resAdvanced,sauce: resSauce});
+            })
+        })
+        
     })
     
     
 })
+app.get("/main",(req,res)=>{
+   
+    res.render("main");
+})
+
 app.post('/', function(req, res){
+   
+   
+    
+       
    
     if(req.body.isItSauce === "true"){
         
@@ -104,7 +132,11 @@ app.post('/', function(req, res){
                 fats: req.body.fats,
                 calories: req.body.calories,
             },
-            ingredients: req.body.ingredients,
+            ingredients: [{
+                name: req.body.ingredient,
+                amount: req.body.ingredientQuantity
+            }]
+            
         };
         sauce.findOneAndUpdate({name:req.body.name},updateSauce,{upsert:true},(err,result)=>{
                 
@@ -115,6 +147,7 @@ app.post('/', function(req, res){
         sauceArr = req.body.invisibleOptionInput;
         const sauceQuantityArr = req.body.optionInput;
         if(sauceArr === undefined){
+            
             const updateDish =  {
                 name: req.body.name,
                 recipe: req.body.recipe,
@@ -126,7 +159,10 @@ app.post('/', function(req, res){
                     carbohydrates: req.body.carbohydrates,
                     calories: req.body.calories,
                 },
-                ingredients: req.body.ingredients,
+                ingredients: {
+                    name: req.body.ingredient,
+                    amount: req.body.ingredientQuantity
+                }
             };
             dish.findOneAndUpdate({name:req.body.name},updateDish,{upsert:true},(err,result)=>{
                     
@@ -152,7 +188,10 @@ app.post('/', function(req, res){
             }
             const updateAdvancedDish =  {
                 name: req.body.name,
-                ingredients: req.body.ingredients,
+                ingredients: [{
+                    name: req.body.ingredient,
+                    amount: req.body.ingredientQuantity
+                }],
                 recipe: req.body.recipe,
                 description: req.body.description,
                 time: req.body.time,
@@ -177,21 +216,59 @@ app.post('/', function(req, res){
         
     }
    
+res.redirect("/test")
+});
+
+app.post("/test",(req,res)=>{
+    dish.exists({_id: req.body.remove},(err,res)=>{
+        if(err){
+            console.log(err)
+        }else{
+            if(res){
+                dish.findByIdAndDelete(req.body.remove,err=>{
+                    if(err){
+                        console.log(err);
+                    }
+                })
+            }
+        }
+    }) 
+
+    advancedDish.exists({_id: req.body.remove},(err,res)=>{
+        if(err){
+            console.log(err)
+        }else{
+            if(res){
+                advancedDish.findByIdAndDelete(req.body.remove,err=>{
+                    if(err){
+                        console.log(err);
+                    }
+                })
+            }
+        }
+    })
+
+    sauce.exists({_id: req.body.remove},(err,res)=>{
+        if(err){
+            console.log(err)
+        }else{
+            if(res){
+                sauce.findByIdAndDelete(req.body.remove,err=>{
+                    if(err){
+                        console.log(err);
+                    }
+                })
+            }
+        }
+    })
+        
     
    
     
-    
-res.redirect("/")
-});
-app.get("/test",(req,res)=>{
-    let i =0;
-     dish.find((err,result)=>{
-        res.render("main",{test: result})
-        
-    })
-    
-    
 })
+
+
+
 
 app.listen(port,()=>{
     console.log("Live");

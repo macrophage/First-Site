@@ -1,62 +1,4 @@
-function addListener (arr,arr1){
-    for(let i = 0; i < arr.length; ++i){
-        arr[i].addEventListener("input",()=>{
-            const value = arr[i].value.trim();
-            const value1 = arr1[i].value.trim();
-            if(value){
-                if(value1){
-                if(i<19){
-                    arr1[i+1].style.visibility = "visible";
-                    arr1[i+1].addEventListener("mousedown",()=>{
-                        arr1[i].disabled = true;
-                        arr[i].disabled = true;
-                    })
-                    arr[i+1].style.visibility = "visible";
-                    arr[i+1].addEventListener("mousedown",()=>{
-                        arr[i].disabled = true;
-                        arr1[i].disabled = true;
-                    })
-                }
-                arr[i].addEventListener('keydown', (event) => {
-                    if (event.key === "Tab") {
-                        if (i < 19) {
-                            arr[i].disabled = true;
-                            arr1[i].disabled = true;
-                        }
-                    }
-                })
-               
-            }
-            }
-            if(!value.trim().length || !value1.trim().length){
-              if(i===0){
-                arr[i + 1].style.visibility = "hidden";
-                arr1[i + 1].style.visibility = "hidden";
-              }else if (i === 19 ){
-                
-                if(!value.trim().length && !value1.trim().length){
-                    arr[i].style.visibility = "hidden";
-                    arr1[i].style.visibility = "hidden";
-                    arr[i - 1].disabled = false;
-                    arr1[i - 1].disabled = false;
 
-                    
-                }
-              }else{
-                arr[i + 1].style.visibility = "hidden";
-                arr1[i + 1].style.visibility = "hidden";
-                if(!value.trim().length && !value1.trim().length){
-                    arr[i].style.visibility = "hidden";
-                    arr1[i].style.visibility = "hidden";
-                    arr[i - 1].disabled = false;
-                    arr1[i - 1].disabled = false;
-                }
-                }
-            }
-            
-        })
-    }
-}
 
 
 function manageFields(sauceName, sel) {
@@ -101,24 +43,13 @@ function manageFields(sauceName, sel) {
 
 //!Make input fields appear, dissapear and grayed out.
 const ing = document.getElementsByClassName("ingredient")
-const q = document.getElementsByClassName("ingredientQuantity");
-addListener(q,ing);
-addListener(ing,q);
+const quantity = document.getElementsByClassName("ingredientQuantity");
+
 
 //! Make fields enabled and make empty fields dissapear on post req 
 
 document.getElementById("submit").addEventListener("mousedown", () => {
-    for (let i = 0; i < ing.length; ++i) {
-        if(ing[0].value!== ""){
-
-        
-        if (ing[i].value.trim().length)
-            ing[i].disabled = false;
-        else {
-            ing[i].disabled = true;
-        }
-        }
-    }
+   
     const checkbox = document.getElementById("isSauce");
     if (checkbox.checked) {
         document.getElementById("isSauceHidden").disabled = true;
@@ -157,5 +88,37 @@ isSauce.addEventListener("click",()=>{
 
 
 // TODO
+let counter = 1;
+let addIngredient = document.getElementsByClassName("addIngredient")[0];
+addIngredient.addEventListener("click",()=>{
+    let remove = document.createElement("input");
+    remove.type = "checkbox";
+    remove.className = "removeBox"+counter++;
+    const container = document.getElementById("container");
+    const div = document.createElement("div");
+    div.className = "dishIngredients";
+    const inputIngredient = document.createElement("input");
+    const inputQuantity = document.createElement("input");
+    inputIngredient.className = "ingredient";
+    inputIngredient.name = "ingredient";
+    inputIngredient.placeholder = "Enter Ingredient";
+    inputIngredient.required = true;
+    inputIngredient.autocomplete = "off";
+    inputQuantity.className = "ingredientQuantity";
+    inputQuantity.name = "ingredientQuantity";
+    inputQuantity.placeholder = "Enter Quantity";
+    inputQuantity.required = true;
+    inputQuantity.autocomplete = "off";
+    container.appendChild(div);
+    div.appendChild(remove);
+    div.appendChild(inputIngredient);
+    div.appendChild(inputQuantity);
+    
+    remove.addEventListener("click",(e)=>{
+        const removeBox = document.getElementsByClassName("removeBox");
+        div.innerHTML=""
 
 
+       --counter;
+    })
+})
