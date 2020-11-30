@@ -1,6 +1,3 @@
-
-
-
 function manageFields(sauceName, sel) {
     const input = document.createElement("input");
     const invisibleInput = document.createElement("input");
@@ -11,14 +8,15 @@ function manageFields(sauceName, sel) {
     const li = document.createElement("li");
     li.className = "sauceNameList"
     input.type = "number";
+    input.required = true;
     input.autocomplete = "off";
     input.min = "0";
-    input.name = "optionInput"; 
+    input.name = "optionInput";
     input.className = "sauceAmount";
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.className = "deleteBox";
-//! Dynamic input
+    //! Dynamic input
     if (sauceName !== "Choose Sauce") {
 
         li.appendChild(document.createTextNode(sauceName));
@@ -49,12 +47,12 @@ const quantity = document.getElementsByClassName("ingredientQuantity");
 //! Make fields enabled and make empty fields dissapear on post req 
 
 document.getElementById("submit").addEventListener("mousedown", () => {
-   
+
     const checkbox = document.getElementById("isSauce");
     if (checkbox.checked) {
         document.getElementById("isSauceHidden").disabled = true;
     }
-    for(let i = 1; i<selector.length;++i){
+    for (let i = 1; i < selector.length; ++i) {
         selector[i].disabled = false;
     }
 
@@ -73,15 +71,15 @@ selector.addEventListener("change", () => {
     manageFields(selector.value, selector);
 
 })
-isSauce.addEventListener("click",()=>{
-    if(isSauce.checked){
+isSauce.addEventListener("click", () => {
+    if (isSauce.checked) {
         selector.disabled = true;
         const ul = document.getElementById("chosenSauce");
-        ul.innerHTML ="";
-        for(let i = 1; i<selector.length;++i){
+        ul.innerHTML = "";
+        for (let i = 1; i < selector.length; ++i) {
             selector[i].disabled = false;
         }
-    }else{
+    } else {
         selector.disabled = false;
     }
 })
@@ -90,10 +88,10 @@ isSauce.addEventListener("click",()=>{
 // TODO
 let counter = 1;
 let addIngredient = document.getElementsByClassName("addIngredient")[0];
-addIngredient.addEventListener("click",()=>{
+addIngredient.addEventListener("click", () => {
     let remove = document.createElement("input");
     remove.type = "checkbox";
-    remove.className = "removeBox"+counter++;
+    remove.className = "removeBox" + counter++;
     const container = document.getElementById("container");
     const div = document.createElement("div");
     div.className = "dishIngredients";
@@ -106,19 +104,21 @@ addIngredient.addEventListener("click",()=>{
     inputIngredient.autocomplete = "off";
     inputQuantity.className = "ingredientQuantity";
     inputQuantity.name = "ingredientQuantity";
+    inputQuantity.type = "number";
     inputQuantity.placeholder = "Enter Quantity";
     inputQuantity.required = true;
     inputQuantity.autocomplete = "off";
+    inputQuantity.min = "0";
     container.appendChild(div);
     div.appendChild(remove);
     div.appendChild(inputIngredient);
     div.appendChild(inputQuantity);
-    
-    remove.addEventListener("click",(e)=>{
+
+    remove.addEventListener("click", (e) => {
         const removeBox = document.getElementsByClassName("removeBox");
-        div.innerHTML=""
+        div.innerHTML = ""
 
 
-       --counter;
+            --counter;
     })
 })

@@ -22,21 +22,22 @@
             <td>
             <% if(sauceCounter>=0){ %>
                 <input type="checkbox" name = "remove" value = "<%= sauce[sauceCounter]._id %>" class = "remove" onChange="this.form.submit()">
-                <%= sauce[sauceCounter].name %>
+                <a href="/main/<%= sauce[sauceCounter].name %> "><%= sauce[sauceCounter].name %></a>
                 <% --sauceCounter %> 
           <% } %>
         </td> 
           <td>
             <% if(dishCounter>=0){ %>
                 <input type="checkbox" name = "remove" value = "<%= dish[dishCounter]._id %>"  class = "remove" onChange="this.form.submit()">
-                <%= dish[dishCounter].name %>
+                <a href="/main/<%= dish[dishCounter].name %> "><%= dish[dishCounter].name %></a>
                 <% --dishCounter %> 
           <% } %> 
         </td>
           <td>
             <% if(advancedDishCounter>=0){ %>
                 <input type="checkbox" name = "remove" value = "<%= advancedDish[advancedDishCounter]._id %>"  class = "remove" onChange="this.form.submit()">
-                <%= advancedDish[advancedDishCounter].name %>
+                <a href="/main/<%= advancedDish[advancedDishCounter].name %>"><%= advancedDish[advancedDishCounter].name %></a>
+                
                 <% --advancedDishCounter %> 
           <% } %>
           </td>

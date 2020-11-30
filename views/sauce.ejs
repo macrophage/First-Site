@@ -1,0 +1,19 @@
+<%- include('header.ejs'); -%>
+
+
+
+<% for(let i = 0; i < sauce.length; ++i){ %>
+    <% if(sauce[i].name === name){ %>
+            <h2><%= sauce[i].name %> </h2>
+             <% for(let k = 0; k < sauce[i].ingredients.name.length; ++k){ %>
+                        <p><%= sauce[i].ingredients.name[k] %> <%= sauce[i].ingredients.amount[k] %> </p>
+            <% } %>     
+            <p><%= sauce[i].recipe %> </p>   
+            <p><%= sauce[i].time %> </p>  
+            <p>Белки - <%= sauce[i].nutritionalValue.proteins %>. Жиры - <%= sauce[i].nutritionalValue.fats %>. Углеводы - <%= sauce[i].nutritionalValue.carbohydrates %>. Калории - <%= sauce[i].nutritionalValue.calories %></p> 
+            
+    <% } %> 
+<% } %> 
+
+ 
+<%- include('footer.ejs'); -%>

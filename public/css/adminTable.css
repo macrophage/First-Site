@@ -14,10 +14,11 @@ table{
   table thead {
     font-size:2rem;
   }
-  h2 a{
-      text-decoration: none;
+  a{
       color: #000;
+      text-decoration: none;
   }
   #edit{
       margin: 2.5rem;
   }
+  

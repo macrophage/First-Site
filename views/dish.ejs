@@ -1,0 +1,20 @@
+<%- include('header.ejs'); -%>
+
+
+
+<% for(let i = 0; i < dish.length; ++i){ %>
+    <% if(dish[i].name === name){ %>
+            <h2><%= dish[i].name %> </h2>
+             <% for(let k = 0; k < dish[i].ingredients.name.length; ++k){ %>
+                        <p> <%= dish[i].ingredients.name[k] %> <%= dish[i].ingredients.amount[k] %> </p>
+                        
+            <% } %>     
+            <p><%= dish[i].recipe %> </p>   
+            <p><%= dish[i].time %> </p>  
+            <p>Белки - <%= dish[i].nutritionalValue.proteins %>. Жиры - <%= dish[i].nutritionalValue.fats %>. Углеводы - <%= dish[i].nutritionalValue.carbohydrates %>. Калории - <%= dish[i].nutritionalValue.calories %></p> 
+            
+    <% } %> 
+<% } %> 
+
+ 
+<%- include('footer.ejs'); -%>

@@ -1,9 +1,12 @@
 <%- include('header.ejs'); -%>
 <div class = "wrapper">
-  <form action="/" method="post">
+  <form action="/" method="post" enctype="application/x-www-form-urlencoded">
      <div class="dishName">
         <label>name</label>
         <input type="text" name="name" required / autocomplete = "off">
+     </div>
+     <div class = "dishImage">
+      
      </div>
      <div class="dishRecipe">
         <label>recipe</label>
@@ -12,7 +15,7 @@
      <input type="button" value = "Add" class = "addIngredient">
      <div id="container">   
         <input class = "ingredient"type="text" required / placeholder="Enter Ingredient" autocomplete="off"name = ingredient>
-        <input class="ingredientQuantity" type="number" placeholder="Enter Quantity" autocomplete="off" required name = ingredientQuantity>
+        <input class="ingredientQuantity" type="number" min="0" placeholder="Enter Quantity" autocomplete="off" required name = ingredientQuantity>
      </div>
      <div class="dishDescription">
         <label>description</label>

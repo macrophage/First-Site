@@ -1,0 +1,11 @@
+<%- include('header.ejs'); -%>
+<h2>There is a slight problem</h2>
+<p>Some food contains this sauce: <ul>
+    <% for(let i = 0; i < namesArr.length; ++i){ %>
+            <li><%= namesArr[i] %></li>
+   <% } %>  
+</ul> 
+</p>
+
+
+<%- include('footer.ejs'); -%>
