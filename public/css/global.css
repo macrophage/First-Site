@@ -3,8 +3,10 @@
   height: 50px;
   width: 100%;
   background-color:#202020;
-  margin-bottom: 2rem;
+  margin: 0;
+  padding: 0;
 }
+
 .navBar ul {
   list-style-type: none;
   margin: 0;
@@ -29,12 +31,16 @@
 }
 
 
-
-
+/*! Other !*/
 body{
   margin: 0;  
+  padding: 0;
 }
 
+h1,h2,h3,h4,h5{
+  margin:0;
+  font-family: 'Oswald', sans-serif;
+}
 
 
 

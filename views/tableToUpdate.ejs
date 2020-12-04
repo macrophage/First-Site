@@ -1,0 +1,59 @@
+<% let sauceCounter = sauce.length -1 %>
+<% let dishCounter = dish.length -1 %>
+<% let advancedDishCounter = advancedDish.length -1 %>
+<% let max = Math.max(sauceCounter, dishCounter, advancedDishCounter); %> 
+
+<%- include('header.ejs'); -%>
+<link rel="stylesheet" href="/css/table.css">
+<form action="/tableToUpdate" method="post">
+<link rel="stylesheet" href="/css/adminTable.css">
+<h2><a href="#" id = "edit">Click Here To Enter Edit Mode</a></h2>
+<div id="wrapperRemoveTable">  
+  <div class="center">
+      <form action="/tableToUpdate" method="post">
+    <table id = "table" class= "update">
+      <thead>
+        <tr>
+          <th>Sauce</th>
+          <th>Food</th>
+          <th>Advanced Food</th>
+        </tr>
+      <tbody>
+          <% while(max>=0){ %>
+        <tr>
+            <td>
+            <% if(sauceCounter>=0){ %>
+                <input type="checkbox" name = "update" value = "<%= sauce[sauceCounter].name %>" class = "remove" onChange="this.form.submit()">
+                <a href="/main/sauce/<%= sauce[sauceCounter].name %> "><%= sauce[sauceCounter].name %></a>
+                <% --sauceCounter %> 
+          <% } %>
+        </td> 
+          <td>
+            <% if(dishCounter>=0){ %>
+                <input type="checkbox" name = "update" value = "<%= dish[dishCounter].name %>"  class = "remove" onChange="this.form.submit()">
+                <a href="/main/dish/<%= dish[dishCounter].name %> "><%= dish[dishCounter].name %></a>
+                <% --dishCounter %> 
+          <% } %> 
+        </td>
+          <td>
+            <% if(advancedDishCounter>=0){ %>
+                <input type="checkbox" name = "update" value = "<%= advancedDish[advancedDishCounter].name %>"  class = "remove" onChange="this.form.submit()">
+                <a href="/main/advanced-dish/<%= advancedDish[advancedDishCounter].name %>"><%= advancedDish[advancedDishCounter].name %></a>
+                
+                <% --advancedDishCounter %> 
+          <% } %>
+          </td>
+        </tr>
+        <% --max %>
+   <% } %>
+      </tbody>
+          
+        
+      </thead>
+    </table>
+</form>
+  </div>
+</div>
+</form>
+<script src="javascript/TableToUpdate.js"></script>
+<%- include('footer.ejs'); -%>

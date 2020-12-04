@@ -2,8 +2,19 @@ const _ = require('lodash');
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const mongooseDynamic = require('mongoose-dynamic-schemas');
+const mongooseDynamic = require('mongoose-dynamic-schemas');//!
 const app = express();
+const multer = require('multer');
+const fs = require('fs');
+
+//set storage engine 
+const storage = multer.diskStorage({
+    destination: './public/images/uploads',
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + ".jpg");
+      }
+    });
+
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -113,7 +124,7 @@ const sauce = mongoose.model("Sauce", sauceSchema);
 const dish = mongoose.model("Dish", dishSchema);
 
 //! ********************************************************************************************* !\\
-app.get("/main/:selfPage", function(req, res) {
+app.get("/main/dish/:selfPage", function(req, res) {
 
     const selfPage = req.params.selfPage;
     dish.exists({
@@ -130,6 +141,10 @@ app.get("/main/:selfPage", function(req, res) {
             })
         }
     })
+})
+
+app.get("/main/advanced-dish/:selfPage", function(req, res) {
+    const selfPage = req.params.selfPage;
     advancedDish.exists({
         name: selfPage
     }, (err, boolean) => {
@@ -144,6 +159,10 @@ app.get("/main/:selfPage", function(req, res) {
             })
         }
     })
+})
+
+app.get("/main/sauce/:selfPage", function(req, res) {
+    const selfPage = req.params.selfPage;
     sauce.exists({
         name: selfPage
     }, (err, boolean) => {
@@ -158,10 +177,8 @@ app.get("/main/:selfPage", function(req, res) {
             })
         }
     })
+})//! three different get's in case we have same names
 
-
-
-})
 
 app.get("/admin", (req, res) => {
     sauce.find((error, result) => {
@@ -177,11 +194,14 @@ app.get("/admin", (req, res) => {
 
 })
 
-app.get("/test", (req, res) => {
+app.get("/table", (req, res) => {
+
+ 
+
     dish.find((err, resDish) => {
         advancedDish.find((err, resAdvanced) => {
             sauce.find((err, resSauce) => {
-                res.render("test", {
+                res.render("table.ejs", {
                     dish: resDish,
                     advancedDish: resAdvanced,
                     sauce: resSauce
@@ -191,11 +211,33 @@ app.get("/test", (req, res) => {
 
     })
 
-
 })
-app.get("/main", (req, res) => {
-
-    res.render("main");
+app.get("/tableToUpdate",(req,res)=>{
+    dish.find((err, resDish) => {
+        advancedDish.find((err, resAdvanced) => {
+            sauce.find((err, resSauce) => {
+                res.render("tableToUpdate.ejs", {
+                    dish: resDish,
+                    advancedDish: resAdvanced,
+                    sauce: resSauce
+                });
+            })
+        })
+    })
+    
+})
+//!send 3 kind of dishes to main
+app.get("/", (req, res) => {
+    dish.find({},(err,dish)=>{
+        advancedDish.find({},(err,advancedDish)=>{
+            sauce.find({},(err,sauce)=>{
+                res.render("main",{dish:dish,
+                    advancedDish:advancedDish,
+                    sauce:sauce});
+            })
+        })
+    })
+    
 })
 
 
@@ -315,11 +357,14 @@ app.post('/', function(req, res) {
 
 
     }
-
-    res.redirect("/test")
+    
+    res.redirect("/TableToUpdate")
 });
 
-app.post("/test", (req, result) => {
+
+
+
+app.post("/table", (req, result) => {
 
     dish.exists({
         _id: req.body.remove
@@ -328,15 +373,20 @@ app.post("/test", (req, result) => {
             console.log(err)
         } else {
             if (res) {
-                dish.findByIdAndDelete(req.body.remove, err => {
-                    if (err) {
-                        console.log(err);
-                    }
+                dish.findOne({_id:req.body.remove},(request,dishRes)=>{
+                    if(fs.existsSync('./public/images/uploads/'+(dishRes.name.replace(/\s+/g, ''))+".jpg"))
+                        fs.unlinkSync('./public/images/uploads/'+(dishRes.name.replace(/\s+/g, ''))+".jpg");
+                        dish.findByIdAndDelete(req.body.remove, err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        
+                    })
                 })
             }
         }
     })
-
+    
     advancedDish.exists({
         _id: req.body.remove
     }, (err, res) => {
@@ -344,10 +394,15 @@ app.post("/test", (req, result) => {
             console.log(err)
         } else {
             if (res) {
-                advancedDish.findByIdAndDelete(req.body.remove, err => {
-                    if (err) {
-                        console.log(err);
-                    }
+                advancedDish.findOne({_id:req.body.remove},(request,advancedDishRes)=>{
+                    if(fs.existsSync('./public/images/uploads/'+(advancedDishRes.name.replace(/\s+/g, ''))+".jpg"))
+                        fs.unlinkSync('./public/images/uploads/'+(advancedDishRes.name.replace(/\s+/g, ''))+".jpg");
+                    advancedDish.findByIdAndDelete(req.body.remove, err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        
+                    })
                 })
             }
         }
@@ -384,6 +439,8 @@ app.post("/test", (req, result) => {
                                 if (err) {
                                     console.log(err);
                                 }
+                                if(fs.existsSync('./public/images/uploads/'+(sauceRes.name.replace(/\s+/g, ''))+".jpg"))
+                                        fs.unlinkSync('./public/images/uploads/'+(sauceRes.name.replace(/\s+/g, ''))+".jpg");
                             })
                         }
                     })
@@ -393,12 +450,23 @@ app.post("/test", (req, result) => {
         }
     })
 
-
-
-
 })
-
-
+let key
+app.post("/tableToUpdate",(req,res)=>{
+    key = req.body.update;
+    res.render("update.ejs",{key:key})
+})
+app.post("/addImage",(req,res)=>{
+    // init upload 
+    const upload = multer ({
+         storage: storage
+    }).single(""+key.replace(/\s+/g, ''));
+    upload(req,res, (err) => {
+        if(err){
+        }
+    });
+    res.redirect("/")
+});
 
 
 app.listen(port, () => {

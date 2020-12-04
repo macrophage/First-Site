@@ -1,0 +1,72 @@
+
+.wrapperAll h2{
+    text-align: center;
+    color:#fff;
+    font-size: 4rem;
+   
+}
+
+.wrapperAll h2 span{
+    border-bottom: 2px outset currentColor;
+    display: inline-block;
+    width: 100%;
+}
+.wrapperAll h3{
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.singleDish {
+ 
+    width: 17%;
+    text-align: center;
+    display: inline-block;
+    margin: 5rem;
+    
+        
+   }
+   
+
+ul{
+    list-style-type: none;
+    margin:0;
+    padding:0; 
+  }
+  a{
+      color:#ccc;
+      text-decoration: none;
+  }
+ 
+  .wrapperLink {
+      margin-bottom: 0.5rem;
+  }
+  
+.wrapperAll{
+    width: 100%;
+    
+    background: linear-gradient(
+        rgba(0,0,0,0.4),
+        rgba(0,0,0,0.4) ),
+        url("/images/drugieElki.jpg");
+        background-attachment: fixed;
+        
+}
+    
+
+.wrapperFood{
+      font-size: 0.8rem;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 400;
+      text-align: center;
+     
+}
+
+.sauceLink:hover{
+    color: yellow;
+   
+    
+}
+.dishImage{
+    width: 8rem;
+    color: #ccc
+}

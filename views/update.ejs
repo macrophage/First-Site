@@ -1,0 +1,9 @@
+<%- include('header.ejs'); -%>
+<form action="/addImage" method="post" enctype="multipart/form-data">
+    <input type="file" name = <%= key.replace(/\s+/g, '') %>>
+    <button type="submit" id ="submit">SUBMIT</button>
+    
+
+</form>
+
+<%- include('footer.ejs'); -%>
