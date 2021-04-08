@@ -1,19 +1,28 @@
 <%- include('header.ejs'); -%>
-
-
-
-<% for(let i = 0; i < sauce.length; ++i){ %>
-    <% if(sauce[i].name === name){ %>
-            <h2><%= sauce[i].name %> </h2>
-             <% for(let k = 0; k < sauce[i].ingredients.name.length; ++k){ %>
-                        <p><%= sauce[i].ingredients.name[k] %> <%= sauce[i].ingredients.amount[k] %> </p>
-            <% } %>     
-            <p><%= sauce[i].recipe %> </p>   
-            <p><%= sauce[i].time %> </p>  
-            <p>Белки - <%= sauce[i].nutritionalValue.proteins %>. Жиры - <%= sauce[i].nutritionalValue.fats %>. Углеводы - <%= sauce[i].nutritionalValue.carbohydrates %>. Калории - <%= sauce[i].nutritionalValue.calories %></p> 
-            
-    <% } %> 
-<% } %> 
-
- 
+<link rel="stylesheet" href="/css/foodStyle.css">
+<link rel="stylesheet" href="/css/sauce.css">
+<div class="wrapperAll">
+    <div class="wrapperNutritional">
+      <% for(let i = 0; i < sauce.length; ++i){ %> <% if(sauce[i].name === name){ %>
+        <h2><%= sauce[i].name %></h2>
+        <p>Время приготовления <%= sauce[i].time %> минут(ы)</p>
+        <p> Белки - <%= sauce[i].nutritionalValue.proteins %>. Жиры - <%=
+          sauce[i].nutritionalValue.fats %>. Углеводы - <%=
+          sauce[i].nutritionalValue.carbohydrates %>. Калории - <%=
+          sauce[i].nutritionalValue.calories %>.
+    </p>
+      <% }} %>
+    </div>  
+  <div class="wrapper">
+    <h3>Ингредиенты: </h3>
+    <% for(let i = 0; i < sauce.length; ++i){ %> <% if(sauce[i].name === name){ %>
+    <% for(let k = 0; k < sauce[i].ingredients.name.length; ++k){ %>
+    <p><%= sauce[i].ingredients.name[k] %> <%= sauce[i].ingredients.amount[k] %>г.</p>
+  
+    <% } %>
+    <h3>Рецепт: </h3>
+    <p><%= sauce[i].recipe %></p>
+    <% } %> <% } %>
+  </div>
+  </div>
 <%- include('footer.ejs'); -%>

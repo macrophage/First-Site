@@ -39,6 +39,47 @@ function manageFields(sauceName, sel) {
 }
 
 
+const isSauce = document.getElementById("isSauce");
+//! Add filter to dish
+const checkboxFilter = document.getElementsByClassName("checkboxFilter");
+for(let i = 0; i < checkboxFilter.length; ++i){
+    checkboxFilter[i].addEventListener("click",()=>{
+        if(i === 0){
+            if(!(checkboxFilter[i+1].disabled)){
+                checkboxFilter[i+1].disabled = "true";
+                checkboxFilter[i+2].disabled = "true";
+                isSauce.disabled = "true";
+            }else{
+                checkboxFilter[i+1].removeAttribute("disabled");
+                checkboxFilter[i+2].removeAttribute("disabled");
+                isSauce.removeAttribute("disabled");
+            }
+        }
+        if(i === 1){
+            if(!(checkboxFilter[i+1].disabled)){
+                checkboxFilter[i+1].disabled = "true";
+                checkboxFilter[i-1].disabled = "true";
+                isSauce.disabled = "true";
+            }else{
+                checkboxFilter[i+1].removeAttribute("disabled");
+                checkboxFilter[i-1].removeAttribute("disabled");
+                isSauce.removeAttribute("disabled");
+            }
+        }
+        if(i === 2){
+            if(!(checkboxFilter[i-1].disabled)){
+                checkboxFilter[i-1].disabled = "true";
+                checkboxFilter[i-2].disabled = "true";
+                isSauce.disabled = "true";
+            }else{
+                checkboxFilter[i-1].removeAttribute("disabled");
+                checkboxFilter[i-2].removeAttribute("disabled");
+                isSauce.removeAttribute("disabled");
+            }
+        }
+    })
+}
+
 //!Make input fields appear, dissapear and grayed out.
 const ing = document.getElementsByClassName("ingredient")
 const quantity = document.getElementsByClassName("ingredientQuantity");
@@ -60,7 +101,7 @@ document.getElementById("submit").addEventListener("mousedown", () => {
 //! By choosing sauce adding number inputfield. By clicking checkbox removing inputfield 
 const selector = document.getElementById("sauceSelector");
 const sauceName = [];
-const isSauce = document.getElementById("isSauce");
+
 
 
 selector.addEventListener("change", () => {
@@ -74,6 +115,9 @@ selector.addEventListener("change", () => {
 isSauce.addEventListener("click", () => {
     if (isSauce.checked) {
         selector.disabled = true;
+        for(let i = 0; i < checkboxFilter.length; ++i){
+            checkboxFilter[i].disabled="true";
+        }
         const ul = document.getElementById("chosenSauce");
         ul.innerHTML = "";
         for (let i = 1; i < selector.length; ++i) {
@@ -81,11 +125,14 @@ isSauce.addEventListener("click", () => {
         }
     } else {
         selector.disabled = false;
+        for(let i = 0; i < checkboxFilter.length; ++i){
+            checkboxFilter[i].removeAttribute("disabled")
+        }
     }
 })
 
 
-// TODO
+
 let counter = 1;
 let addIngredient = document.getElementsByClassName("addIngredient")[0];
 addIngredient.addEventListener("click", () => {
@@ -115,10 +162,8 @@ addIngredient.addEventListener("click", () => {
     div.appendChild(inputQuantity);
 
     remove.addEventListener("click", (e) => {
-        const removeBox = document.getElementsByClassName("removeBox");
         div.innerHTML = ""
-
-
             --counter;
     })
 })
+

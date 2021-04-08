@@ -8,10 +8,10 @@ document.getElementById("edit").addEventListener("click",(e)=>{
         let body = document.getElementById("body");
         body.className = "bodyDelete";
         e.target.style.color = "white";
+        document.getElementsByClassName("gotoDelete")[0].querySelector("a").style.color = "white";
         for(let i=1; i < count; ++i){   
             for(j = 0; j <  table.rows[i].cells.length; ++j){
                     if(table.rows[i].cells[j].querySelector("a") !== null){
-                            table.rows[i].cells[j].querySelector("a").style.color = "#ccc";
                     }
             }
         }
@@ -20,10 +20,10 @@ document.getElementById("edit").addEventListener("click",(e)=>{
        e.target.innerHTML = "Click Here To Enter Edit Mode"
        e.target.style.color = "black";
        body.classList.remove("bodyDelete");
+       document.getElementsByClassName("gotoDelete")[0].querySelector("a").style.color = "black";
        for(let i=1; i < count; ++i){   
         for(j = 0; j <  table.rows[i].cells.length; ++j){
                 if(table.rows[i].cells[j].querySelector("a") !== null){
-                        table.rows[i].cells[j].querySelector("a").style.color = "black";
                 }
         }
     }

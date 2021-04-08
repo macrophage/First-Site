@@ -1,19 +1,28 @@
 <%- include('header.ejs'); -%>
-
-
-
-<% for(let i = 0; i < advancedDish.length; ++i){ %>
-    <% if(advancedDish[i].name === name){ %>
-            <h2><%= advancedDish[i].name %> </h2>
-             <% for(let k = 0; k < advancedDish[i].ingredients.name.length; ++k){ %>
-                <p> <%= advancedDish[i].ingredients.name[k] %> <%= advancedDish[i].ingredients.amount[k] %> </p>
-            <% } %>     
-            <p><%= advancedDish[i].recipe %> </p>   
-            <p><%= advancedDish[i].time %> </p>  
-            <p>Белки - <%= advancedDish[i].nutritionalValue.proteins %>. Жиры - <%= advancedDish[i].nutritionalValue.fats %>. Углеводы - <%= advancedDish[i].nutritionalValue.carbohydrates %>. Калории - <%= advancedDish[i].nutritionalValue.calories %></p> 
-            
-    <% } %> 
-<% } %> 
-
- 
+<link rel="stylesheet" href="/css/foodStyle.css">
+<link rel="stylesheet" href="/css/advancedDish.css">
+<div class="wrapperAll">
+    <div class="wrapperNutritional">
+      <% for(let i = 0; i < advancedDish.length; ++i){ %> <% if(advancedDish[i].name === name){ %>
+        <h2><%= advancedDish[i].name %></h2>
+        <p>Время приготовления <%= advancedDish[i].time %> минут(ы)</p>
+        <p> Белки - <%= advancedDish[i].nutritionalValue.proteins %>. Жиры - <%=
+          advancedDish[i].nutritionalValue.fats %>. Углеводы - <%=
+          advancedDish[i].nutritionalValue.carbohydrates %>. Калории - <%=
+          advancedDish[i].nutritionalValue.calories %>.
+    </p>
+      <% }} %>
+    </div>  
+  <div class="wrapper">
+    <h3>Ингредиенты: </h3>
+    <% for(let i = 0; i < advancedDish.length; ++i){ %> <% if(advancedDish[i].name === name){ %>
+    <% for(let k = 0; k < advancedDish[i].ingredients.name.length; ++k){ %>
+    <p><%= advancedDish[i].ingredients.name[k] %> <%= advancedDish[i].ingredients.amount[k] %>г.</p>
+  
+    <% } %>
+    <h3>Рецепт: </h3>
+    <p><%= advancedDish[i].recipe %></p>
+    <% } %> <% } %>
+  </div>
+  </div>
 <%- include('footer.ejs'); -%>

@@ -1,72 +1,145 @@
-
-.wrapperAll h2{
-    text-align: center;
-    color:#fff;
-    font-size: 4rem;
-   
+.filterAll {
+  background-color: #ccc;
+}
+.filter-main {
+  height: 150px;
+  width: 100%;
+  padding-top: 1px;
+  text-align: center;
+  line-height: 150px;
+}
+.filter-main:hover {
+  color: red;
+}
+.filter-fish {
+  height: 75px;
+  width: 33.333%;
+  display: inline-block;
+  border-top: solid 1px black;
+  text-align: center;
+  line-height: 75px;
+}
+.filter-fish:hover {
+  color: red;
+}
+.filter-meat {
+  height: 75px;
+  width: 33.333%;
+  display: inline-block;
+  border-top: solid 1px black;
+  text-align: center;
+  line-height: 75px;
+}
+.filter-meat:hover {
+  color: red;
+}
+.filter-vegetables {
+  height: 75px;
+  width: 33.333%;
+  display: inline-block;
+  border-top: solid 1px black;
+  text-align: center;
+  line-height: 75px;
+}
+.filter-vegetables:hover {
+  color: red;
 }
 
-.wrapperAll h2 span{
-    border-bottom: 2px outset currentColor;
-    display: inline-block;
-    width: 100%;
-}
-.wrapperAll h3{
-    font-weight: 700;
-    font-size: 2rem;
+.wrapper h2 {
+  text-align: center;
 }
 
+.wrapper h2 span {
+  display: inline-block;
+  width: 100%;
+}
+.wrapperh3 {
+  font-weight: 700;
+  font-size: 2rem;
+}
+.wrapperFood {
+  text-align: center;
+  width: 100%;
+  height: auto;
+}
+
+.wrapperLink a{
+  color:rgb(255, 0, 0);
+}
 .singleDish {
- 
-    width: 17%;
-    text-align: center;
-    display: inline-block;
-    margin: 5rem;
-    
-        
-   }
-   
-
-ul{
-    list-style-type: none;
-    margin:0;
-    padding:0; 
-  }
-  a{
-      color:#ccc;
-      text-decoration: none;
-  }
- 
-  .wrapperLink {
-      margin-bottom: 0.5rem;
-  }
-  
-.wrapperAll{
-    width: 100%;
-    
-    background: linear-gradient(
-        rgba(0,0,0,0.4),
-        rgba(0,0,0,0.4) ),
-        url("/images/drugieElki.jpg");
-        background-attachment: fixed;
-        
+  margin: 1%;
+  width: 23%;
+  display: inline-block;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  border: solid 3px black;
+  border-radius: 0 0 5% 5%;
 }
-    
-
-.wrapperFood{
-      font-size: 0.8rem;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 400;
-      text-align: center;
-     
+h3 {
+  text-align: center;
+  font-size: 2em;
 }
 
-.sauceLink:hover{
-    color: yellow;
-   
-    
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
-.dishImage{
-    width: 8rem;
-    color: #ccc
+
+.wrapperLink {
+  margin-bottom: 0.5rem;
+}
+
+.sauceLink:hover {
+  color: yellow;
+}
+.img-dish {
+  width: 100%;
+}
+.img-wrap {
+  position: relative;
+  text-align: center;
+  height: auto;
+}
+
+.img-description_layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translate(-50%, -50%);
+  line-height: 100%;
+  color: #fff;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.img-wrap:hover .img-description_layer {
+  visibility: visible;
+  opacity: 1;
+}
+
+.img-description {
+  transition: 0.2s;
+  transform: translateY(1em);
+}
+
+.wrapperAll {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("/images/background.png");
+  background-size: cover;
+
+  height: 100%;
+  background-attachment: fixed;
+}
+
+img {
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.img-wrap:hover img {
+  filter: brightness(25%);
+}
+
+h3 {
+  color: #e6e6e6;
 }

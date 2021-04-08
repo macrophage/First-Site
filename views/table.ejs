@@ -5,7 +5,8 @@
 
 <%- include('header.ejs'); -%>
 <link rel="stylesheet" href="/css/table.css">
-<h2><a href="#" id = "edit">Click Here To Enter Edit Mode</a></h2>
+<h2 class = "edit"><a href="#" id = "edit">Click Here To Enter Edit Mode</a></h2> 
+<h1 class = "gotoDelete"><a href="/tableToUpdate">THIS IS <span style="text-decoration: underline;">DELETE</span> SECTION</a></h1>
 <div id="wrapperRemoveTable">  
   <div class="center">
       <form action="/table" method="post">
@@ -49,6 +50,7 @@
         
       </thead>
     </table>
+    
 </form>
   </div>
 </div>

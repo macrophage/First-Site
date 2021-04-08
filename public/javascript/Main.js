@@ -19,7 +19,7 @@ for(let i = 0; i < link.length; ++i){
                     timeout()
 .then(
   function () {
-    sauce[k].style.border = "none";
+    sauce[k].style.border = "3px solid black";
   }
 );
                     
@@ -27,4 +27,6 @@ for(let i = 0; i < link.length; ++i){
             }
         })
 };
-document.body.removeAttribute("tabindex")
+
+
+

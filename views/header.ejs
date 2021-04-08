@@ -12,10 +12,12 @@
 <header id = "mainHeader">
   <div class = "navBar"> 
     <ul>
+      <% if(currentUser && currentUser.isAdmin) { %>
       <li><a href="/admin">Admin</a></li>
-      <li><a href="/">Main</a></li>
       <li><a href="/table">Table</a></li>
-      <li><a href="/tableToUpdate">Table2</a></li>
+      <%  } %> 
+      <li><a href="/">Main</a></li>
+      
     </ul>
   </div>
 </header>

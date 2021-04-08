@@ -1,0 +1,121 @@
+<%- include('header.ejs'); -%>
+<link rel="stylesheet" href="/css/main.css" />
+<div class="filterAll">
+  <a href="/"
+    ><div class="filter-main"><h2>ПОЛНЫЙ СПИСОК БЛЮД</h2></div></a
+  >
+  <a href="/filter-fish"
+    ><div class="filter-fish"><h2>БЛЮДА С РЫБОЙ</h2></div></a
+  ><a href="/filter-meat"
+    ><div class="filter-meat"><h2>БЛЮДА С МЯСОМ</h2></div></a
+  ><a href="/filter-vegetables"
+    ><div class="filter-vegetables"><h2>БЛЮДА С ОВОЩАМИ</h2></div></a
+  >
+</div>
+
+<div class="wrapperAll">
+  <div class="wrapper">
+    <h2><span>Заголовок</span></h2>
+    <div class="wrapperFood wrapperDish">
+      <% for(let i = 0; i < dish.length; ++i){ %> <% if(dish[i].fish) { %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/main/dish/<%=dish[i].name%>"
+      >
+        <div class="singleDish dish">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= dish[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>Белки: <%= dish[i].nutritionalValue.proteins %></li>
+                  <li>Жиры: <%= dish[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= dish[i].nutritionalValue.carbohydrates %>
+                  </li>
+                  <li>Калории: <%= dish[i].nutritionalValue.calories %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h3 name="<%= dish[i].name %>">
+            <strong><%= dish[i].name %></strong>
+          </h3>
+        </div>
+      </a>
+      <% } %> <% } %>
+    </div>
+    <h2><span>Заголовок</span></h2>
+    <div class="wrapperFood wrapperAdvancedDish">
+      <% for(let i = 0; i < advancedDish.length; ++i){ %> <%
+      if(advancedDish[i].fish) { %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/main/advanced-dish/<%=advancedDish[i].name%>"
+      >
+        <div class="singleDish advancedDish">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= advancedDish[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <h3 name="<%= advancedDish[i].name %>">
+              <%= advancedDish[i].name %>
+            </h3>
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>
+                    Белки: <%= advancedDish[i].nutritionalValue.proteins %>
+                  </li>
+                  <li>Жиры: <%= advancedDish[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= advancedDish[i].nutritionalValue.carbohydrates
+                    %>
+                  </li>
+                  <li>
+                    Калории: <%= advancedDish[i].nutritionalValue.calories %>
+                  </li>
+                </ul>
+              </div>
+              <p>
+                Содержит соус<% if(advancedDish[i].contain.length>1){ %>ы: <%
+                }else{ %>: <% } %>
+              </p>
+
+              <ul>
+                <% for(let k = 0; k < advancedDish[i].contain.length; ++k){ %>
+                <div class="wrapperLink">
+                  <li>
+                    <a
+                      href="#"
+                      class="sauceLink"
+                      name="<%= advancedDish[i].contain[k].name %>s"
+                      ><%= advancedDish[i].contain[k].name %></a
+                    >
+                  </li>
+                </div>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </a>
+      <% } %> <% } %>
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+<script src="javascript/Main.js"></script>
+<%- include('footer.ejs'); -%>

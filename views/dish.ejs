@@ -1,21 +1,29 @@
 <%- include('header.ejs'); -%>
+<link rel="stylesheet" href="/css/foodStyle.css" />
+<link rel="stylesheet" href="/css/dish.css" />
+<div class="wrapperAll">
+  <div class="wrapperNutritional">
+    <% for(let i = 0; i < dish.length; ++i){ %> <% if(dish[i].name === name){ %>
+      <h2><%= dish[i].name %></h2>
+      <p>Время приготовления <%= dish[i].time %> минут(ы)</p>
+      <p> Белки - <%= dish[i].nutritionalValue.proteins %>. Жиры - <%=
+        dish[i].nutritionalValue.fats %>. Углеводы - <%=
+        dish[i].nutritionalValue.carbohydrates %>. Калории - <%=
+        dish[i].nutritionalValue.calories %>.
+  </p>
+    <% }} %>
+  </div>  
+<div class="wrapper">
+  <h3>Ингредиенты: </h3>
+  <% for(let i = 0; i < dish.length; ++i){ %> <% if(dish[i].name === name){ %>
+  <% for(let k = 0; k < dish[i].ingredients.name.length; ++k){ %>
+  <p><%= dish[i].ingredients.name[k] %> <%= dish[i].ingredients.amount[k] %>г.</p>
 
-
-
-<% for(let i = 0; i < dish.length; ++i){ %>
-    <% if(dish[i].name === name){ %>
-            <h2><%= dish[i].name %> </h2>
-             <% for(let k = 0; k < dish[i].ingredients.name.length; ++k){ %>
-                        <p> <%= dish[i].ingredients.name[k] %> <%= dish[i].ingredients.amount[k] %> </p>
-                        
-            <% } %>     
-            <p><%= dish[i].recipe %> </p>   
-            <p><%= dish[i].time %> </p>  
-            <p>Белки - <%= dish[i].nutritionalValue.proteins %>. Жиры - <%= dish[i].nutritionalValue.fats %>. Углеводы - <%= dish[i].nutritionalValue.carbohydrates %>. Калории - <%= dish[i].nutritionalValue.calories %></p> 
-            
-    <% } %> 
-<% } %> 
-
+  <% } %>
+  <h3>Рецепт: </h3>
+  <p><%= dish[i].recipe %></p>
+  <% } %> <% } %>
+</div>
  
+</div>
 <%- include('footer.ejs'); -%>
-

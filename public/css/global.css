@@ -1,6 +1,6 @@
 /** HEADER **/
 #mainHeader{
-  height: 50px;
+  height: 53.8px;
   width: 100%;
   background-color:#202020;
   margin: 0;
@@ -8,10 +8,8 @@
 }
 
 .navBar ul {
-  list-style-type: none;
   margin: 0;
   padding: 0;
-  
 }
 
 .navBar ul li {
@@ -35,11 +33,27 @@
 body{
   margin: 0;  
   padding: 0;
+  
 }
+a{
+  text-decoration: none;
+  list-style-type: none;
+  color:#fff;
+}
+
 
 h1,h2,h3,h4,h5{
   margin:0;
   font-family: 'Oswald', sans-serif;
+  size: 55px
+}
+
+h2 span{
+  color:black;
+  font-size: 5rem;
+}
+p,li,ul,a{
+  font-family: 'Open Sans', sans-serif;
 }
 
 
