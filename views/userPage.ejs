@@ -1,3 +1,4 @@
+<%- include('header.ejs'); -%>
 <link
   rel="stylesheet"
   href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
@@ -9,5 +10,8 @@
   href="https://bootswatch.com/4/journal/bootstrap.min.css"
 />
 <h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= user.name %></p>
+<p class="lead mb-3">Welcome <%= pageHolder[0].name %></p>
 <a href="/logout" class="btn btn-secondary">Logout</a>
+
+
+<%- include('footer.ejs'); -%>

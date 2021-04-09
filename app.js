@@ -87,11 +87,7 @@ const port = process.env.port || 3000;
 
 //! ********************************************************************************************* !\\
 //login and logout handler
-app.get('/dashboard', ensureAuthenticated, (req, res) =>
-  res.render('dashboard', {
-    user: req.user
-  })
-);
+
 // Logout
 app.get('/logout', (req, res) => {
     req.logout();
@@ -101,7 +97,7 @@ app.get('/logout', (req, res) => {
 //
 app.get('/login', function(req, res) {
     if(req.isAuthenticated()){
-        res.redirect("/dashboard")
+        res.redirect("/main/users/"+req.user.name)
     }else{
         res.render("login.ejs");
     }
@@ -111,8 +107,38 @@ app.get('/register', function(req, res) {
     res.render("register.ejs");
 })
 
+app.get('/userList',ensureAuthenticated, authRole(ROLE.ADMIN), function(req, res) {
+  User.find({}, function(err, users) {
+        res.render("userList",{users:users,
+        currentUser:req.user});  
+    });
+  });
 
-
+app.get("/main/users/:selfUser", ensureAuthenticated, function(req,res){
+    const selfUser = req.params.selfUser;
+    User.exists({
+        name: selfUser
+    }, (err,boolean)=>{
+        if(boolean) {
+            User.find({
+                name:selfUser
+            }, (err,User)=>{
+                if(User[0].email === req.user.email || req.user.role == ROLE.ADMIN){
+                res.render("userPage.ejs",{
+                    pageHolder:User,
+                    name:selfUser,
+                    currentUser:req.user
+                })
+                
+            }else{
+                res.redirect("/main/users/"+req.user.name)
+            }
+            })
+        }else{
+            res.redirect("/main/users/"+req.user.name)
+        }
+    })
+})
 app.get("/main/dish/:selfPage", function(req, res) {
 
     const selfPage = req.params.selfPage;
@@ -603,12 +629,12 @@ app.post("/register", (req,res)=>{
       });
     }
   });
-  
+ 
   
 app.post("/login",(req,res,next) =>{
     
     passport.authenticate('local',{
-    successRedirect:"/dashboard",
+    successRedirect:"/main/users/"+req.user,
     failureRedirect:"/login",
     failureFlash:true
 })(req,res,next);

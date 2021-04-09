@@ -1,0 +1,14 @@
+<%- include('header.ejs'); -%>
+<div class="">
+    <table>
+        <% for(let i = 1; i < users.length; ++i) { %> 
+        <tr>
+          <td><%= users[i].email %></td>
+          <td> <a href="/main/users/<%= users[i].name %> " style = 'color: blue;'><%= users[i].name %> </a>
+        </tr>
+        <% } %> 
+      </table>
+</div>
+
+
+<%- include('footer.ejs'); -%>

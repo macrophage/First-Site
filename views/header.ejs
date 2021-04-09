@@ -15,9 +15,12 @@
       <% if(currentUser && currentUser.isAdmin) { %>
       <li><a href="/admin">Admin</a></li>
       <li><a href="/table">Table</a></li>
+      <li><a href="/userList">Users</a></li>
       <%  } %> 
-      <li><a href="/">Main</a></li>
-      
+      <% if(currentUser) { %>
+        <li><a href="/main/users/<%= currentUser.name %> ">Account</a></li>
+        <% } %>
+      <li><a href="/">Main</a></li> 
     </ul>
   </div>
 </header>
