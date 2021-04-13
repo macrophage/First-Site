@@ -1,7 +1,8 @@
 <%- include('header.ejs'); -%>
+  
 <link rel="stylesheet" href="/css/adminAssemble.css">
 <div class = "wrapper">
-  <form action="/" method="post">
+  <form autocomplete="off" action="/" method="post">
      <div class="dishName">
         <label>name</label>
         <input type="text" name="name" required / autocomplete = "off">
@@ -28,8 +29,8 @@
         <label>recipe</label>
         <textarea name="recipe"30" rows="10" required></textarea>
      </div>
-     <input type="button" value = "Add" class = "addIngredient">
-     <div id="container">   
+     <input type="button" id="addIngredient" value = "Add" class = "addIngredient">
+     <div id="container" class="autocomplete">   
         <input class = "ingredient"type="text" required / placeholder="Enter Ingredient" autocomplete="off"name = ingredient>
         <input class="ingredientQuantity" type="number" min="0" placeholder="Enter Quantity" autocomplete="off" required name = ingredientQuantity>
      </div>
@@ -71,5 +72,9 @@
      <button type="submit" id ="submit">Add New Dish</button>
   </form>
 </div>
+<script>
+let arrIngredients = '<%- JSON.stringify(allIngredients) %>'
+
+</script>
 <script src="javascript/Admin.js"></script>
 <%- include('footer.ejs'); -%>

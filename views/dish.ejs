@@ -24,6 +24,30 @@
   <p><%= dish[i].recipe %></p>
   <% } %> <% } %>
 </div>
- 
 </div>
+  
+<% if(currentUser) { %>
+<div class="form__favorite">
+  <form action="/main/dish/favorite" method="post">
+     <button id="favButton" type="submit" name="name" value="<%=name%>">
+      <% let fav = false %>
+      <% let favoriteDish = currentUser.favoriteDish %>  
+      <% for (let i = 0; i<favoriteDish.length; ++i) { %>
+        <% if(favoriteDish[i].name === name){ %>
+            <% fav = true %>
+            <% break %>  
+        <% }else{ %>
+            <% fav = false %> 
+       <% } %> 
+        <% } %>
+        <% if(fav){ %>
+              Убрать из избранного
+        <% }else{ %>
+              Добавить в избранное
+       <% } %> 
+      </button>
+  </form>
+</div>
+<% } %> 
+
 <%- include('footer.ejs'); -%>

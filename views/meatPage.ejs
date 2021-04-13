@@ -15,7 +15,7 @@
 
 <div class="wrapperAll">
   <div class="wrapper">
-    <h2><span>Заголовок</span></h2>
+    <!-- <h2><span>Заголовок</span></h2> -->
     <div class="wrapperFood wrapperDish">
       <% for(let i = 0; i < dish.length; ++i){ %>
         <% if(dish[i].meat) { %> 
@@ -53,7 +53,7 @@
       <% } %>
       <% } %>
     </div>
-    <h2><span>Заголовок</span></h2>
+    <!-- <h2><span>Заголовок</span></h2> -->
     <div class="wrapperFood wrapperAdvancedDish">
       <% for(let i = 0; i < advancedDish.length; ++i){ %>
         <% if(advancedDish[i].meat) { %> 
@@ -114,6 +114,40 @@
       </a>
       <% } %>
       <% } %>
+      <div class="wrapperFood wrapperSauce">
+      <% for(let i = 0; i < sauce.length; ++i){ %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        name="<%= sauce[i].name %>"
+        href="/main/sauce/<%=sauce[i].name%>"
+      >
+        <div class="singleDish sauce">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= sauce[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <h3 name="<%= sauce[i].name %>"><%= sauce[i].name %></h3>
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>Белки: <%= sauce[i].nutritionalValue.proteins %></li>
+                  <li>Жиры: <%= sauce[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= sauce[i].nutritionalValue.carbohydrates %>
+                  </li>
+                  <li>Калории: <%= sauce[i].nutritionalValue.calories %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <% } %>
+    </div>
     </div>
    
     </div>

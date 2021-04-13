@@ -1,17 +1,41 @@
 <%- include('header.ejs'); -%>
 
-
-
-
 <link rel="stylesheet" href="/css/main.css" />
+
 <div class="filterAll">
   <a href="/"><div class="filter-main"><h2>ПОЛНЫЙ СПИСОК БЛЮД</h2></div></a>
   
   <a href="/filter-fish"><div class="filter-fish"><h2>БЛЮДА С РЫБОЙ</h2></div></a><a href="/filter-meat"><div class="filter-meat"><h2>БЛЮДА С МЯСОМ</h2></div></a><a href="/filter-vegetables"><div class="filter-vegetables"><h2>БЛЮДА С ОВОЩАМИ</h2></div></a>
 </div>
+<div class="searchBoxWrap">
+  <div class="searchBox">
+<div>
+  <label for="">Поиск по ингредиентам</label>
+</div>
+<div>
+  <form autocomplete="off" action="/search" method="post">
+  <input class = "ingredient" type="text" name="searchIng" id="" placeholder="Начните вводить ингредиент">
+  <div class = "resetSearch"><Button type="submit" disabled id = "acceptSearch" class="confirm">Подтвердить</Button>
+  
+    <button disabled class="reset" id="resetSearch">Сбросить</button>
+
+  </div>
+  <div>
+    <ul id="ulIngredients">
+      
+    </ul>
+  </div>
+  </form>
+</div>
+
+</div>
+
+</div>
+
+
 <div class="wrapperAll">
   <div class="wrapper">
-    <h2><span>Заголовок</span></h2>
+    <!-- <h2><span>Блюда</span></h2> -->
     <div class="wrapperFood wrapperDish">
       <% for(let i = 0; i < dish.length; ++i){ %>
       <a
@@ -19,6 +43,7 @@
         rel="noopener noreferrer"
         href="/main/dish/<%=dish[i].name%>"
       >
+      
         <div class="singleDish dish">
           <div class="img-wrap">
             <img
@@ -45,7 +70,7 @@
       </a>
       <% } %>
     </div>
-    <h2><span>Заголовок</span></h2>
+    <!-- <h2><span>Блюда с добавлением соусов</span></h2> -->
     <div class="wrapperFood wrapperAdvancedDish">
       <% for(let i = 0; i < advancedDish.length; ++i){ %>
       <a
@@ -105,7 +130,7 @@
       </a>
       <% } %>
     </div>
-    <h2><span>Заголовок</span></h2>
+    <!-- <h2><span>Соусы</span></h2> -->
     <div class="wrapperFood wrapperSauce">
       <% for(let i = 0; i < sauce.length; ++i){ %>
       <a
@@ -142,5 +167,11 @@
     </div>
   </div>
 </div>
+ 
+
+<script>
+let arrIngredients = '<%- JSON.stringify(allIngredients) %>'
+
+</script>
 <script src="javascript/Main.js"></script>
 <%- include('footer.ejs'); -%>

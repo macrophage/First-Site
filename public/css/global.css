@@ -37,8 +37,6 @@ body{
   
 }
 a{
-  text-decoration: none;
-  list-style-type: none;
   color:#fff;
 }
 
@@ -55,6 +53,8 @@ h2 span{
 }
 p,li,ul,a{
   font-family: 'Open Sans', sans-serif;
+  list-style-type: none;
+  text-decoration: none;
 }
 
 

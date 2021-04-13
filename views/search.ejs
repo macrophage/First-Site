@@ -1,0 +1,173 @@
+<%- include('header.ejs'); -%>
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<div class="filterAll">
+  <a href="/"><div class="filter-main"><h2>ГЛАВНАЯ СТРАНИЦА</h2></div></a>
+  
+  
+</div>
+<div class="searchBoxWrap">
+  <div class="searchBox">
+<div>
+  <label for="">Поиск по ингредиентам</label>
+</div>
+<div>
+  <form autocomplete="off" action="/search" method="post">
+  <input class = "ingredient" type="text" name="searchIng" id="" placeholder="Начните вводить ингредиент">
+  <div class = "resetSearch"><Button type="submit" disabled id = "acceptSearch" class="confirm">Подтвердить</Button>
+  
+    <button disabled class="reset" id="resetSearch">Сбросить</button>
+
+  </div>
+  <div>
+    <ul id="ulIngredients">
+      
+    </ul>
+  </div>
+  </form>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="wrapperAll">
+  <div class="wrapper">
+    <!-- <h2><span>Блюда</span></h2> -->
+    <div class="wrapperFood wrapperDish">
+      <% for(let i = 0; i < searchDish.length; ++i){ %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/main/dish/<%=searchDish[i].name%>"
+      >
+      
+        <div class="singleDish dish">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= searchDish[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>Белки: <%= searchDish[i].nutritionalValue.proteins %></li>
+                  <li>Жиры: <%= searchDish[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= searchDish[i].nutritionalValue.carbohydrates %>
+                  </li>
+                  <li>Калории: <%= searchDish[i].nutritionalValue.calories %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+            <h3 name="<%= searchDish[i].name %>"><strong><%= searchDish[i].name %></strong></h3>
+        </div>
+      </a>
+      <% } %>
+    </div>
+    <!-- <h2><span>Блюда с добавлением соусов</span></h2> -->
+    <div class="wrapperFood wrapperAdvancedDish">
+      <% for(let i = 0; i < searchAdvancedDish.length; ++i){ %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/main/advanced-dish/<%=searchAdvancedDish[i].name%>"
+      >
+        <div class="singleDish advancedDish">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= searchAdvancedDish[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <h3 name="<%= searchAdvancedDish[i].name %>">
+              <%= searchAdvancedDish[i].name %>
+            </h3>
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>
+                    Белки: <%= searchAdvancedDish[i].nutritionalValue.proteins %>
+                  </li>
+                  <li>Жиры: <%= searchAdvancedDish[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= searchAdvancedDish[i].nutritionalValue.carbohydrates
+                    %>
+                  </li>
+                  <li>
+                    Калории: <%= searchAdvancedDish[i].nutritionalValue.calories %>
+                  </li>
+                </ul>
+              </div>
+              <p>
+                Содержит соус<% if(searchAdvancedDish[i].contain.length>1){ %>ы: <%
+                }else{ %>: <% } %>
+              </p>
+
+              <ul>
+                <% for(let k = 0; k < searchAdvancedDish[i].contain.length; ++k){ %>
+                <div class="wrapperLink">
+                  <li>
+                    <a
+                      href="#"
+                      class="sauceLink"
+                      name="<%= searchAdvancedDish[i].contain[k].name %>s"
+                      ><%= searchAdvancedDish[i].contain[k].name %> 
+                    </a>
+                  </li>
+                </div>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </a>
+      <% } %>
+    </div>
+    <!-- <h2><span>Соусы</span></h2> -->
+    <div class="wrapperFood wrapperSauce">
+      <% for(let i = 0; i < sauce.length; ++i){ %>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        name="<%= sauce[i].name %>"
+        href="/main/sauce/<%=sauce[i].name%>"
+      >
+        <div class="singleDish sauce">
+          <div class="img-wrap">
+            <img
+              class="img-dish"
+              src="images/uploads/<%= sauce[i].name.replace(/\s+/g, '') %>.jpg"
+              onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
+            />
+            <h3 name="<%= sauce[i].name %>"><%= sauce[i].name %></h3>
+            <div class="img-description_layer">
+              <h5>Пищевая ценность на 100г:</h5>
+              <div class="nutritionalValueDish">
+                <ul>
+                  <li>Белки: <%= sauce[i].nutritionalValue.proteins %></li>
+                  <li>Жиры: <%= sauce[i].nutritionalValue.fats %></li>
+                  <li>
+                    Углеводы: <%= sauce[i].nutritionalValue.carbohydrates %>
+                  </li>
+                  <li>Калории: <%= sauce[i].nutritionalValue.calories %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <% } %>
+    </div>
+  </div>
+</div>
+ 
+
+<script src="javascript/Main.js"></script>
+<%- include('footer.ejs'); -%>

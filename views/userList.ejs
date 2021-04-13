@@ -1,10 +1,17 @@
 <%- include('header.ejs'); -%>
 <div class="">
     <table>
-        <% for(let i = 1; i < users.length; ++i) { %> 
+        <% for(let i = 0; i < users.length; ++i) { %> 
         <tr>
+          <% if(users[i].isAdmin){ %>
+            
+         <% } else { %>
           <td><%= users[i].email %></td>
-          <td> <a href="/main/users/<%= users[i].name %> " style = 'color: blue;'><%= users[i].name %> </a>
+          <td>      
+            <a href="/main/users/<%= users[i].name %> " style = 'color: blue;'><%= users[i].name %>
+            </a>  
+            </td>
+         <% } %>
         </tr>
         <% } %> 
       </table>

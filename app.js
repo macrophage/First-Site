@@ -1,7 +1,35 @@
+function sauceIngPercent (advancedDish,advancedDishIndex, searchArr) {
+    let right = 0;
+    let number = 0;
+    
+        
+        for(let i = 0; i < advancedDish[advancedDishIndex].contain.length;++i){
+            number = advancedDish[advancedDishIndex].contain[i].ingredients.name.length;
+            for(let j = 0; j < number;++j){
+                for(let k = 0; k<searchArr.length;++k){
+                    if(searchArr[k]===advancedDish[advancedDishIndex].contain[i].ingredients.name[j]){
+                        ++right;
+                        
+                    }
+                }
+            }
+        }
+        
+    
+    
+    return {
+        right,
+        number
+    };
+}
+
+
 const _ = require('lodash');
 const express = require("express");
 
-const { ROLE } = require('./public/data')
+const {
+    ROLE
+} = require('./public/data')
 
 const bodyParser = require("body-parser");
 const passport = require('passport');
@@ -23,23 +51,31 @@ const multer = require('multer');
 const fs = require('fs');
 
 
-const advancedDish = require ("./models/dish").advancedDish
-const dish = require ("./models/dish").dish
-const sauce = require ("./models/dish").sauce
+const advancedDish = require("./models/dish").advancedDish
+const dish = require("./models/dish").dish
+const sauce = require("./models/dish").sauce
 
 
 // Load User model
 const User = require("./models/users")
-const { forwardAuthenticated, ensureAuthenticated, authRole } = require('./public/config/auth');
+const {
+    forwardAuthenticated,
+    ensureAuthenticated,
+    authRole
+} = require('./public/config/auth');
+const e = require('express');
+const { assert } = require('console');
+const { first } = require('lodash');
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 
-  
+
 //set storage engine 
 const storage = multer.diskStorage({
     destination: './public/images/uploads',
-    filename: function (req, file, callback) {
+    filename: function(req, file, callback) {
         callback(null, file.fieldname + ".jpg");
-      }
-    });
+    }
+});
 
 
 
@@ -48,13 +84,17 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({
-  extended: true
+    extended: true
 }));
 //express-session
-app.use(session({ cookie: { maxAge: 3.6e+6 }, 
+app.use(session({
+    cookie: {
+        maxAge: 3.6e+6
+    },
     secret: 'woot',
-    resave: false, 
-    saveUninitialized: false}));
+    resave: false,
+    saveUninitialized: false
+}));
 //Connect flash
 app.use(flash());
 
@@ -64,7 +104,7 @@ app.use(function(req, res, next) {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     next();
-  });
+});
 
 //passport middleware
 app.use(passport.initialize());
@@ -83,8 +123,6 @@ const port = process.env.port || 3000;
 
 
 
-
-
 //! ********************************************************************************************* !\\
 //login and logout handler
 
@@ -93,49 +131,51 @@ app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
     req.flash('success_msg', 'You are logged out');
-  });
+});
 //
 app.get('/login', function(req, res) {
-    if(req.isAuthenticated()){
-        res.redirect("/main/users/"+req.user.name)
-    }else{
+    if (req.isAuthenticated()) {
+        res.redirect("/main/users/" + req.user.name)
+    } else {
         res.render("login.ejs");
     }
-    
+
 })
 app.get('/register', function(req, res) {
     res.render("register.ejs");
 })
 
-app.get('/userList',ensureAuthenticated, authRole(ROLE.ADMIN), function(req, res) {
-  User.find({}, function(err, users) {
-        res.render("userList",{users:users,
-        currentUser:req.user});  
+app.get('/userList', ensureAuthenticated, authRole(ROLE.ADMIN), function(req, res) {
+    User.find({}, function(err, users) {
+        res.render("userList", {
+            users: users,
+            currentUser: req.user
+        });
     });
-  });
+});
 
-app.get("/main/users/:selfUser", ensureAuthenticated, function(req,res){
+app.get("/main/users/:selfUser", ensureAuthenticated, function(req, res) {
     const selfUser = req.params.selfUser;
     User.exists({
         name: selfUser
-    }, (err,boolean)=>{
-        if(boolean) {
+    }, (err, boolean) => {
+        if (boolean) {
             User.find({
-                name:selfUser
-            }, (err,User)=>{
-                if(User[0].email === req.user.email || req.user.role == ROLE.ADMIN){
-                res.render("userPage.ejs",{
-                    pageHolder:User,
-                    name:selfUser,
-                    currentUser:req.user
-                })
-                
-            }else{
-                res.redirect("/main/users/"+req.user.name)
-            }
+                name: selfUser
+            }, (err, User) => {
+                if (User[0].email === req.user.email || req.user.role == ROLE.ADMIN) {
+                    res.render("userPage.ejs", {
+                        pageHolder: User,
+                        name: selfUser,
+                        currentUser: req.user
+                    })
+
+                } else {
+                    res.redirect("/main/users/" + req.user.name)
+                }
             })
-        }else{
-            res.redirect("/main/users/"+req.user.name)
+        } else {
+            res.redirect("/main/users/" + req.user.name)
         }
     })
 })
@@ -152,7 +192,7 @@ app.get("/main/dish/:selfPage", function(req, res) {
                 res.render("dish.ejs", {
                     dish: dish,
                     name: selfPage,
-                    currentUser:req.user
+                    currentUser: req.user
                 });
             })
         }
@@ -171,7 +211,7 @@ app.get("/main/advanced-dish/:selfPage", function(req, res) {
                 res.render("advancedDish.ejs", {
                     advancedDish: advancedDish,
                     name: selfPage,
-                    currentUser:req.user
+                    currentUser: req.user
                 });
             })
         }
@@ -190,32 +230,73 @@ app.get("/main/sauce/:selfPage", function(req, res) {
                 res.render("sauce.ejs", {
                     sauce: sauce,
                     name: selfPage,
-                    currentUser:req.user
+                    currentUser: req.user
                 });
             })
         }
     })
-})//! three different get's in case we have same names
+}) //! three different get's in case we have same names
 
 
-app.get("/admin",ensureAuthenticated,authRole(ROLE.ADMIN), (req, res) => {
-    sauce.find((error, result) => {
+app.get("/admin",ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
 
-        res.render("admin", {
-            sauceName: result,
-            currentUser:req.user,
-        })
-        dish.find((error, result) => {
+    dish.find({}, (err, dish) => {
+        let dishIngredients = []
+        let advancedDishIngredients = []
+        let allIngredients = []
+        for (let i = 0; i < dish.length; ++i) {
+            for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
+                dishIngredients.push(dish[i].ingredients.name[j]) 
+                allIngredients.push(dish[i].ingredients.name[j])
+            }
+        }
+        let dishUniqueIngredients = new Set(dishIngredients)
+        advancedDish.find({}, (err, advancedDish) => {
+            
+        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
+            for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
+                advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
+                allIngredients.push(advancedDish[i].ingredients.name[j])
+            }
+        }
+        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
+            for (let j = 0; j < advancedDish[i].contain.length; ++j) {
+                for(let k = 0; k < advancedDish[i].contain[j].ingredients.name.length;++k){
+                    advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
+                }
+            }
+        }
+        let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+        let allIngredientsUnique = new Set(allIngredients)//convert to set and back to array with unique units
+        allIngredients = Array.from(allIngredientsUnique)
+        advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+        dishIngredients = Array.from(dishUniqueIngredients)
 
+            sauce.find({}, (err, result) => {
+                for (let i = 0; i < result.length; ++i) {
+                    for (let j = 0; j < result[i].ingredients.name.length; ++j) { 
+                        allIngredients.push(result[i].ingredients.name[j])
+                    }
+                }
+                
+                res.render("admin", {
+                    sauceName: result,
+                    currentUser: req.user,
+                    dishIngredients:dishIngredients,
+                    advancedDishIngredients:advancedDishIngredients,
+                    allIngredients:allIngredients
+                });
+            })
         })
     })
+    
 
 
 })
 
-app.get("/table",ensureAuthenticated,authRole(ROLE.ADMIN), (req, res) => {
+app.get("/table", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
 
- 
+
 
     dish.find((err, resDish) => {
         advancedDish.find((err, resAdvanced) => {
@@ -224,7 +305,7 @@ app.get("/table",ensureAuthenticated,authRole(ROLE.ADMIN), (req, res) => {
                     dish: resDish,
                     advancedDish: resAdvanced,
                     sauce: resSauce,
-                    currentUser:req.user
+                    currentUser: req.user
                 });
             })
         })
@@ -232,7 +313,7 @@ app.get("/table",ensureAuthenticated,authRole(ROLE.ADMIN), (req, res) => {
     })
 
 })
-app.get("/tableToUpdate",ensureAuthenticated,authRole(ROLE.ADMIN), (req,res)=>{
+app.get("/tableToUpdate", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
     dish.find((err, resDish) => {
         advancedDish.find((err, resAdvanced) => {
             sauce.find((err, resSauce) => {
@@ -240,65 +321,217 @@ app.get("/tableToUpdate",ensureAuthenticated,authRole(ROLE.ADMIN), (req,res)=>{
                     dish: resDish,
                     advancedDish: resAdvanced,
                     sauce: resSauce,
-                    currentUser:req.user
+                    currentUser: req.user
                 });
             })
         })
     })
-    
+
 })
 //!send 3 kind of dishes to main
+
 app.get("/", (req, res) => {
     
-    dish.find({},(err,dish)=>{
-        advancedDish.find({},(err,advancedDish)=>{
-            sauce.find({},(err,sauce)=>{
-                res.render("main",{dish:dish,
-                    advancedDish:advancedDish,
-                    sauce:sauce,
-                    currentUser:req.user
+    
+    dish.find({}, (err, dish) => {
+        let dishIngredients = []
+        let advancedDishIngredients = []
+        let allIngredients = []
+        for (let i = 0; i < dish.length; ++i) {
+            for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
+                dishIngredients.push(dish[i].ingredients.name[j]) 
+                allIngredients.push(dish[i].ingredients.name[j])
+            }
+        }
+        let dishUniqueIngredients = new Set(dishIngredients)
+        advancedDish.find({}, (err, advancedDish) => {
+            
+        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
+            for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
+                advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
+                allIngredients.push(advancedDish[i].ingredients.name[j])
+            }
+        }
+        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
+            for (let j = 0; j < advancedDish[i].contain.length; ++j) {
+                for(let k = 0; k < advancedDish[i].contain[j].ingredients.name.length;++k){
+                    advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
+                    allIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
+                }
+            }
+        }
+        let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+        let allIngredientsUnique = new Set(allIngredients)//convert to set and back to array with unique units
+        allIngredients = Array.from(allIngredientsUnique)
+        advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+        dishIngredients = Array.from(dishUniqueIngredients)
+        
+            sauce.find({}, (err, sauce) => {
+                
+                res.render("main", {
+                    dish: dish,
+                    advancedDish: advancedDish,
+                    sauce: sauce,
+                    currentUser: req.user,
+                    dishIngredients:dishIngredients,
+                    advancedDishIngredients:advancedDishIngredients,
+                    allIngredients:allIngredients,
+                    
                 });
             })
         })
     })
-    
+
 })
-app.get("/filter-meat",(req,res)=>{
-    dish.find({},(err,dish)=>{
-        advancedDish.find({},(err,advancedDish)=>{
-            sauce.find({},(err,sauce)=>{
-                res.render("meatPage",{dish:dish,
-                    advancedDish:advancedDish,
-                    sauce:sauce,
-                    currentUser:req.user});
+app.get("/filter-meat", (req, res) => {
+    dish.find({}, (err, dish) => {
+        advancedDish.find({}, (err, advancedDish) => {
+            sauce.find({}, (err, sauce) => {
+                res.render("meatPage", {
+                    dish: dish,
+                    advancedDish: advancedDish,
+                    sauce: sauce,
+                    currentUser: req.user
+                });
             })
         })
     })
 })
-app.get("/filter-fish",(req,res)=>{
-    dish.find({},(err,dish)=>{
-        advancedDish.find({},(err,advancedDish)=>{
-            sauce.find({},(err,sauce)=>{
-                res.render("fishPage",{dish:dish,
-                    advancedDish:advancedDish,
-                    sauce:sauce,
-                    currentUser:req.user});
+app.get("/filter-fish", (req, res) => {
+    dish.find({}, (err, dish) => {
+        advancedDish.find({}, (err, advancedDish) => {
+            sauce.find({}, (err, sauce) => {
+                res.render("fishPage", {
+                    dish: dish,
+                    advancedDish: advancedDish,
+                    sauce: sauce,
+                    currentUser: req.user
+                });
             })
         })
     })
 })
-app.get("/filter-vegetables",(req,res)=>{
-    dish.find({},(err,dish)=>{
-        advancedDish.find({},(err,advancedDish)=>{
-            sauce.find({},(err,sauce)=>{
-                res.render("vegetablesPage",{dish:dish,
-                    advancedDish:advancedDish,
-                    sauce:sauce,
-                    currentUser:req.user});
+app.get("/filter-vegetables", (req, res) => {
+    dish.find({}, (err, dish) => {
+        advancedDish.find({}, (err, advancedDish) => {
+            sauce.find({}, (err, sauce) => {
+                res.render("vegetablesPage", {
+                    dish: dish,
+                    advancedDish: advancedDish,
+                    sauce: sauce,
+                    currentUser: req.user
+                });
             })
         })
     })
 })
+app.post("/search", (req, res) => {
+    let searchArr = req.body.searchIng.split(',')
+    dish.find({}, (err, dish) => {
+            let dishIngredients = []
+            let advancedDishIngredients = []
+            let allIngredients = []
+            for (let i = 0; i < dish.length; ++i) {
+                for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
+                    dishIngredients.push(dish[i].ingredients.name[j])
+                    allIngredients.push(dish[i].ingredients.name[j])
+                }
+            }
+            let dishUniqueIngredients = new Set(dishIngredients)
+            advancedDish.find({}, (err, advancedDish) => {
+
+                    for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
+                        for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
+                            advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
+                            allIngredients.push(advancedDish[i].ingredients.name[j])
+                        }
+                    }
+                    for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
+                        for (let j = 0; j < advancedDish[i].contain.length; ++j) {
+                            for (let k = 0; k < advancedDish[i].contain[j].ingredients.name.length; ++k) {
+                                advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
+                                allIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
+                            }
+                        }
+                    }
+                    let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+                    let allIngredientsUnique = new Set(allIngredients) //convert to set and back to array with unique units
+                    allIngredients = Array.from(allIngredientsUnique)
+                    advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+                    dishIngredients = Array.from(dishUniqueIngredients)
+
+                    sauce.find({}, (err, sauce) => {
+                            let right = 0;
+                            let rightSauce = 0
+                            let dishRight = [];
+                            let advancedDishRight = [];
+
+                            for (let i = 0; i < dish.length; ++i) {
+                                let ingNameLength = dish[i].ingredients.name.length
+                                for (let j = 0; j < ingNameLength; ++j) {
+                                    for (let k = 0; k < searchArr.length; ++k) {
+                                        if (searchArr[k] === dish[i].ingredients.name[j])
+                                            ++right;
+                                    }
+                                }
+                                if (right / ingNameLength > 0.495) {
+                                    dishRight.push(dish[i])
+                                }
+                                
+                                right = 0;
+                            }
+
+                            {
+                                for (let i = 0; i < advancedDish.length; ++i) {
+                                    let advancedIngNameLength = advancedDish[i].ingredients.name.length
+                                    for (let j = 0; j < advancedIngNameLength; ++j)
+                                        for (let m = 0; m < searchArr.length; ++m) {
+                                            if (searchArr[m] === advancedDish[i].ingredients.name[j]) {
+                                                ++right;
+                                            }
+                                            
+                                        }
+                                        let values = sauceIngPercent(advancedDish,i,searchArr)
+                                        
+                                        if  (((right+values.right)/(advancedIngNameLength+values.number))>0.495) {
+                                            advancedDishRight.push(advancedDish[i])
+                                        }
+                                   
+                                }
+                                right = 0;
+                            }
+                            
+                            if(dishRight.length > 0 || advancedDishRight.length > 0){
+                                
+                                res.render("search.ejs", {
+                                    
+                                    searchDish:dishRight,
+                                    searchAdvancedDish:advancedDishRight,
+                                    currentUser: req.user,
+                                    sauce:sauce
+                                });
+                            }else{
+                                res.render("main.ejs", {
+                                    dish: dish,
+                                    advancedDish: advancedDish,
+                                    sauce: sauce,
+                                    currentUser: req.user,
+                                    dishIngredients:dishIngredients,
+                                    advancedDishIngredients:advancedDishIngredients,
+                                    allIngredients:allIngredients,
+                                })
+                            }
+                            
+
+
+                        })
+
+                        
+                    })
+            })
+    })
+
+
 app.post('/', function(req, res) {
 
 
@@ -338,15 +571,17 @@ app.post('/', function(req, res) {
         const sauceQuantityArr = req.body.optionInput;
         if (sauceArr === undefined) {
             let meat, fish, vegetables;
-            if(req.body.meat){
+            if (req.body.meat) {
                 meat = true;
                 fish = false;
                 vegetables = false;
-            }if(req.body.fish){
+            }
+            if (req.body.fish) {
                 meat = false;
                 fish = true;
                 vegetables = false;
-            }if(req.body.vegetables){
+            }
+            if (req.body.vegetables) {
                 meat = false;
                 fish = false;
                 vegetables = true;
@@ -371,7 +606,7 @@ app.post('/', function(req, res) {
                 fish: fish,
                 vegetables: vegetables
             };
-            
+
             dish.findOneAndUpdate({
                 name: req.body.name
             }, updateDish, {
@@ -399,15 +634,17 @@ app.post('/', function(req, res) {
                     }
                 }
                 let meat, fish, vegetables;
-                if(req.body.meat){
+                if (req.body.meat) {
                     meat = true;
                     fish = false;
                     vegetables = false;
-                }if(req.body.fish){
+                }
+                if (req.body.fish) {
                     meat = false;
                     fish = true;
                     vegetables = false;
-                }if(req.body.vegetables){
+                }
+                if (req.body.vegetables) {
                     meat = false;
                     fish = false;
                     vegetables = true;
@@ -449,7 +686,7 @@ app.post('/', function(req, res) {
 
 
     }
-    
+
     res.redirect("/TableToUpdate")
 });
 
@@ -465,20 +702,33 @@ app.post("/table", (req, result) => {
             console.log(err)
         } else {
             if (res) {
-                dish.findOne({_id:req.body.remove},(request,dishRes)=>{
-                    if(fs.existsSync('./public/images/uploads/'+(dishRes.name.replace(/\s+/g, ''))+".jpg"))
-                        fs.unlinkSync('./public/images/uploads/'+(dishRes.name.replace(/\s+/g, ''))+".jpg");
-                        dish.findByIdAndDelete(req.body.remove, err => {
+                dish.findOne({
+                    _id: req.body.remove
+                }, (request, dishRes) => {
+                    //!remove from favorite if dish deleted
+                    User.findOneAndUpdate(
+                        {
+                            favoriteDish:dishRes
+                        },
+                        {
+                            $pull: {
+                                favoriteDish: dishRes
+                            },
+                        },(disherr,dishdoc)=>{}
+                    )
+                    if (fs.existsSync('./public/images/uploads/' + (dishRes.name.replace(/\s+/g, '')) + ".jpg"))
+                        fs.unlinkSync('./public/images/uploads/' + (dishRes.name.replace(/\s+/g, '')) + ".jpg");
+                    dish.findByIdAndDelete(req.body.remove, err => {
                         if (err) {
                             console.log(err);
                         }
-                        
+
                     })
                 })
             }
         }
     })
-    
+
     advancedDish.exists({
         _id: req.body.remove
     }, (err, res) => {
@@ -486,14 +736,27 @@ app.post("/table", (req, result) => {
             console.log(err)
         } else {
             if (res) {
-                advancedDish.findOne({_id:req.body.remove},(request,advancedDishRes)=>{
-                    if(fs.existsSync('./public/images/uploads/'+(advancedDishRes.name.replace(/\s+/g, ''))+".jpg"))
-                        fs.unlinkSync('./public/images/uploads/'+(advancedDishRes.name.replace(/\s+/g, ''))+".jpg");
+                advancedDish.findOne({
+                    _id: req.body.remove
+                }, (request, advancedDishRes) => {
+                    //!remove from favorite if dish deleted
+                    User.findOneAndUpdate(
+                        {
+                            favoriteAdvancedDish: advancedDishRes
+                        },
+                        {
+                            $pull: {
+                                favoriteAdvancedDish: advancedDishRes
+                            },
+                        },(advdish,advdishdoc)=>{}
+                    )
+                    if (fs.existsSync('./public/images/uploads/' + (advancedDishRes.name.replace(/\s+/g, '')) + ".jpg"))
+                        fs.unlinkSync('./public/images/uploads/' + (advancedDishRes.name.replace(/\s+/g, '')) + ".jpg");
                     advancedDish.findByIdAndDelete(req.body.remove, err => {
                         if (err) {
                             console.log(err);
                         }
-                        
+
                     })
                 })
             }
@@ -525,15 +788,15 @@ app.post("/table", (req, result) => {
                         if (namesArr.length > 0) {
                             result.render("deleteError.ejs", {
                                 namesArr: namesArr,
-                                currentUser:req.user
+                                currentUser: req.user
                             })
                         } else {
                             sauce.findByIdAndDelete(req.body.remove, err => {
                                 if (err) {
                                     console.log(err);
                                 }
-                                if(fs.existsSync('./public/images/uploads/'+(sauceRes.name.replace(/\s+/g, ''))+".jpg"))
-                                        fs.unlinkSync('./public/images/uploads/'+(sauceRes.name.replace(/\s+/g, ''))+".jpg");
+                                if (fs.existsSync('./public/images/uploads/' + (sauceRes.name.replace(/\s+/g, '')) + ".jpg"))
+                                    fs.unlinkSync('./public/images/uploads/' + (sauceRes.name.replace(/\s+/g, '')) + ".jpg");
                             })
                         }
                     })
@@ -545,108 +808,201 @@ app.post("/table", (req, result) => {
 
 })
 let key
-app.post("/tableToUpdate",(req,res)=>{
+app.post("/tableToUpdate", (req, res) => {
     key = req.body.update;
-    res.render("update.ejs",{key:key,
-        currentUser:req.user})
+    res.render("update.ejs", {
+        key: key,
+        currentUser: req.user
+    })
 })
-app.post("/addImage",(req,res)=>{
+app.post("/addImage", (req, res) => {
     // init upload 
-    const upload = multer ({
-         storage: storage
-    }).single(""+key.replace(/\s+/g, ''));
-    upload(req,res, (err) => {
-        if(err){
-        }
+    const upload = multer({
+        storage: storage
+    }).single("" + key.replace(/\s+/g, ''));
+    upload(req, res, (err) => {
+        if (err) {}
     });
     res.redirect("/")
 });
-app.post("/register", (req,res)=>{
-   
-    const { name, email, password, password2 } = req.body;
-    let errors = [];
-  
-    if (!name || !email || !password || !password2) {
-      errors.push({ msg: 'Please enter all fields' });
-    }
-  
-    if (password != password2) {
-      errors.push({ msg: 'Passwords do not match' });
-    }
-  
-    if (password.length < 6) {
-      errors.push({ msg: 'Password must be at least 6 characters' });
-    }
-  
-    if (errors.length > 0) {
-      res.render('register', {
-        errors,
+app.post("/register", (req, res) => {
+
+    const {
         name,
         email,
         password,
         password2
-      });
-    } else {
-      User.findOne({ email: email }).then(user => {
-        if (user) {
-          errors.push({ msg: 'Email already exists' });
-          res.render('register', {
+    } = req.body;
+    let errors = [];
+
+    if (!name || !email || !password || !password2) {
+        errors.push({
+            msg: 'Пожалуйста, заполните все поля'
+        });
+    }
+
+    if (password != password2) {
+        errors.push({
+            msg: 'Пароли не совпадают'
+        });
+    }
+
+    if (password.length < 6) {
+        errors.push({
+            msg: 'Пароль должен быть минимум 6 символов'
+        });
+    }
+
+    if (errors.length > 0) {
+        res.render('register', {
             errors,
             name,
             email,
             password,
             password2
-          });
-        } else {
-          var newUser = new User({
-            name,
-            email,
-            password
-          });
-          if(req.body.adminCode == "admin"){
-              newUser.isAdmin = true;
-              newUser.role = "admin";
-          }
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err;
-              newUser.password = hash;
-              newUser
-                .save()
-                .then(user => {
-                  req.flash(
-                    'success_msg',
-                    'You are now registered and can log in'
-                    
-                  );
-                  
-                  res.redirect('/login');
-                })
-                .catch(err => console.log(err));
-            });
-          });
-        }
-      });
+        });
+    } else {
+        User.findOne({
+            email: email
+        }).then(user => {
+            if (user) {
+                errors.push({
+                    msg: 'Этот Email уже используется'
+                });
+                res.render('register', {
+                    errors,
+                    name,
+                    email,
+                    password,
+                    password2
+                });
+            } else {
+                var newUser = new User({
+                    name,
+                    email,
+                    password
+                });
+                if (req.body.adminCode == "admin") {
+                    newUser.isAdmin = true;
+                    newUser.role = "admin";
+                }
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) throw err;
+                        newUser.password = hash;
+                        newUser
+                            .save()
+                            .then(user => {
+                                req.flash(
+                                    'success_msg',
+                                    'Вы зарегестрированны и можете зайти'
+
+                                );
+
+                                res.redirect('/login');
+                            })
+                            .catch(err => console.log(err));
+                    });
+                });
+            }
+        });
     }
-  });
- 
-  
-app.post("/login",(req,res,next) =>{
-    
-    passport.authenticate('local',{
-    successRedirect:"/main/users/"+req.user,
-    failureRedirect:"/login",
-    failureFlash:true
-})(req,res,next);
 });
 
 
-function checkAuthenticated(req,res,next){
-    if(req.isAuthenticated()){
-        return next()
-    }
-    res.redirect("/login")
-}
+app.post("/login", (req, res, next) => {
+
+    passport.authenticate('local', {
+        successRedirect: "/main/users/" + req.user,
+        failureRedirect: "/login",
+        failureFlash: true
+    })(req, res, next);
+});
+
+app.post("/deleteUser", (req, res) => {
+    User.deleteOne({
+        email: req.body.email
+    }, () => {
+        res.redirect("/userList")
+    })
+})
+
+app.post("/main/dish/favorite",(req,res)=>{
+    
+    dish.findOne({name:req.body.name},(err,thatDish)=>{
+        User.exists({favoriteDish:thatDish},(undefined,exist)=>{
+            if(!exist){
+                User.findOneAndUpdate(
+                    {
+                        name:req.user.name
+                    },
+                    {
+                        $addToSet: {
+                            favoriteDish: thatDish
+                        }
+                    },(err,doc)=>{
+                        doc.save();
+                        res.redirect("/main/dish/"+thatDish.name)
+                    }
+                    )
+            }else{
+                
+                User.findOneAndUpdate(
+                    {
+                        name:req.user.name
+                    },
+                    {
+                        $pull: {
+                            favoriteDish: thatDish
+                        }
+                    },(err,doc)=>{
+                        doc.save();
+                        res.redirect("/main/dish/"+thatDish.name)
+                    }
+                    )
+            }
+
+        })
+    }) 
+})
+app.post("/main/advanced-dish/favorite",(req,res)=>{
+    
+    advancedDish.findOne({name:req.body.name},(err,thatDish)=>{
+        User.exists({favoriteAdvancedDish:thatDish},(undefined,exist)=>{
+            if(!exist){
+                
+                User.findOneAndUpdate(
+                    {
+                        name:req.user.name
+                    },
+                    {
+                        $addToSet: {
+                            favoriteAdvancedDish: thatDish
+                        }
+                    },(err,doc)=>{
+                        doc.save();
+                        res.redirect("/main/advanced-dish/"+thatDish.name)
+                    }
+                    )
+            }else{
+                
+                User.findOneAndUpdate(
+                    {
+                        name:req.user.name
+                    },
+                    {
+                        $pull: {
+                            favoriteAdvancedDish: thatDish
+                        }
+                    },(err,doc)=>{
+                        doc.save();
+                        res.redirect("/main/advanced-dish/"+thatDish.name)
+                    }
+                    )
+            }
+        })
+    }) 
+})
 app.listen(port, () => {
     console.log("Live");
 })

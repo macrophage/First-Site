@@ -25,4 +25,28 @@
     <% } %> <% } %>
   </div>
   </div>
+
+  <% if(currentUser) { %>
+    <div class="form__favorite">
+      <form action="/main/advanced-dish/favorite" method="post">
+         <button id="favButton" type="submit" name="name" value="<%=name%>">
+          <% let fav = false %>
+          <% let favoriteAdvancedDish = currentUser.favoriteAdvancedDish %>  
+          <% for (let i = 0; i<favoriteAdvancedDish.length; ++i) { %>
+            <% if(favoriteAdvancedDish[i].name === name){ %>
+                <% fav = true %>
+                <% break %>  
+            <% }else{ %>
+                <% fav = false %> 
+           <% } %> 
+            <% } %>
+            <% if(fav){ %>
+                  Убрать из избранного
+            <% }else{ %>
+                  Добавить в избранное
+           <% } %> 
+          </button>
+      </form>
+    </div>
+    <% } %> 
 <%- include('footer.ejs'); -%>

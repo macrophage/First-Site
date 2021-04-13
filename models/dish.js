@@ -92,5 +92,5 @@ const advancedDish = mongoose.model("AdvancedDish", advancedDishSchema);
 const sauce = mongoose.model("Sauce", sauceSchema);
 const dish = mongoose.model("Dish", dishSchema);
 
-module.exports = {dish,sauce,advancedDish}
+module.exports = {dish,sauce,advancedDish,dishSchema,advancedDishSchema,sauceSchema}
 
