@@ -64,7 +64,7 @@ app.use(express.urlencoded({
 //express-session
 app.use(session({
     
-    secret: process.env.SESSION_SECRET,
+    secret: "process.env.SESSION_SECRET",
     resave: false,
     saveUninitialized: false
 }));
@@ -762,7 +762,7 @@ app.post("/register", (req, res) => {
                     email,
                     password
                 });
-                if (req.body.adminCode == process.env.GETADMIN_SECRET) {
+                if (req.body.adminCode == /*process.env.GETADMIN_SECRET*/"admin") {
                     newUser.isAdmin = true;
                     newUser.role = "admin";
                 }
