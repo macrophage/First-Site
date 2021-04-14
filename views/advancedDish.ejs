@@ -3,6 +3,13 @@
 <link rel="stylesheet" href="/css/advancedDish.css">
 <div class="wrapperAll">
     <div class="wrapperNutritional">
+      <div>
+        <img
+          class="img-dish"
+          src="/images/uploads/<%= name.replace(/\s+/g, '') %>.jpg"
+          onerror="if (this.src != '/images/uploads/default.jpg') this.src = '/images/uploads/default.jpg';"
+        />
+</div>
       <% for(let i = 0; i < advancedDish.length; ++i){ %> <% if(advancedDish[i].name === name){ %>
         <h2><%= advancedDish[i].name %></h2>
         <p>Время приготовления <%= advancedDish[i].time %> минут(ы)</p>
@@ -15,9 +22,10 @@
     </div>  
   <div class="wrapper">
     <h3>Ингредиенты: </h3>
+    <ul class="ingredients"></ul>
     <% for(let i = 0; i < advancedDish.length; ++i){ %> <% if(advancedDish[i].name === name){ %>
     <% for(let k = 0; k < advancedDish[i].ingredients.name.length; ++k){ %>
-    <p><%= advancedDish[i].ingredients.name[k] %> <%= advancedDish[i].ingredients.amount[k] %>г.</p>
+   <li><%= advancedDish[i].ingredients.name[k] %> <%= advancedDish[i].ingredients.amount[k] %>г.</li></ul>
   
     <% } %>
     <h3>Рецепт: </h3>
@@ -27,7 +35,7 @@
   </div>
 
   <% if(currentUser) { %>
-    <div class="form__favorite">
+    <div class="form__favorite wrapperAll">
       <form action="/main/advanced-dish/favorite" method="post">
          <button id="favButton" type="submit" name="name" value="<%=name%>">
           <% let fav = false %>

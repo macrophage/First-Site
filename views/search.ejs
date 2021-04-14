@@ -9,24 +9,7 @@
 </div>
 <div class="searchBoxWrap">
   <div class="searchBox">
-<div>
-  <label for="">Поиск по ингредиентам</label>
-</div>
-<div>
-  <form autocomplete="off" action="/search" method="post">
-  <input class = "ingredient" type="text" name="searchIng" id="" placeholder="Начните вводить ингредиент">
-  <div class = "resetSearch"><Button type="submit" disabled id = "acceptSearch" class="confirm">Подтвердить</Button>
-  
-    <button disabled class="reset" id="resetSearch">Сбросить</button>
 
-  </div>
-  <div>
-    <ul id="ulIngredients">
-      
-    </ul>
-  </div>
-  </form>
-</div>
 
 </div>
 
@@ -47,7 +30,7 @@
         <div class="singleDish dish">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1"
               src="images/uploads/<%= searchDish[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />
@@ -81,7 +64,7 @@
         <div class="singleDish advancedDish">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1"
               src="images/uploads/<%= searchAdvancedDish[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />
@@ -142,7 +125,7 @@
         <div class="singleDish sauce">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1"
               src="images/uploads/<%= sauce[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />

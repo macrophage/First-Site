@@ -1,28 +1,9 @@
-function sauceIngPercent (advancedDish,advancedDishIndex, searchArr) {
-    let right = 0;
-    let number = 0;
-    
-        
-        for(let i = 0; i < advancedDish[advancedDishIndex].contain.length;++i){
-            number = advancedDish[advancedDishIndex].contain[i].ingredients.name.length;
-            for(let j = 0; j < number;++j){
-                for(let k = 0; k<searchArr.length;++k){
-                    if(searchArr[k]===advancedDish[advancedDishIndex].contain[i].ingredients.name[j]){
-                        ++right;
-                        
-                    }
-                }
-            }
-        }
-        
-    
-    
-    return {
-        right,
-        number
-    };
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config({path:"./public/.env" })
 }
 
+
+const search = require("./functions/search")
 
 const _ = require('lodash');
 const express = require("express");
@@ -43,20 +24,12 @@ const bcrypt = require('bcrypt');
 const app = express();
 //passport config
 require("./public/config/passport")(passport)
-//
 const session = require('express-session');
-
-
 const multer = require('multer');
 const fs = require('fs');
-
-
 const advancedDish = require("./models/dish").advancedDish
 const dish = require("./models/dish").dish
 const sauce = require("./models/dish").sauce
-
-
-// Load User model
 const User = require("./models/users")
 const {
     forwardAuthenticated,
@@ -64,11 +37,16 @@ const {
     authRole
 } = require('./public/config/auth');
 const e = require('express');
-const { assert } = require('console');
-const { first } = require('lodash');
-const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
-
-
+const {
+    assert
+} = require('console');
+const {
+    first
+} = require('lodash');
+const {
+    SSL_OP_SSLEAY_080_CLIENT_DH_BUG
+} = require('constants');
+const { env } = require("process");
 //set storage engine 
 const storage = multer.diskStorage({
     destination: './public/images/uploads',
@@ -76,9 +54,6 @@ const storage = multer.diskStorage({
         callback(null, file.fieldname + ".jpg");
     }
 });
-
-
-
 
 app.set('view engine', 'ejs');
 
@@ -88,10 +63,8 @@ app.use(express.urlencoded({
 }));
 //express-session
 app.use(session({
-    cookie: {
-        maxAge: 3.6e+6
-    },
-    secret: 'woot',
+    
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
@@ -119,11 +92,6 @@ mongoose.connect("mongodb://localhost:27017/foodDB", {
 const port = process.env.port || 3000;
 
 //! ********************************************************************************************* !\\
-
-
-
-
-//! ********************************************************************************************* !\\
 //login and logout handler
 
 // Logout
@@ -142,7 +110,9 @@ app.get('/login', function(req, res) {
 
 })
 app.get('/register', function(req, res) {
-    res.render("register.ejs");
+    res.render("register.ejs", {
+        currentUser: req.user
+    });
 })
 
 app.get('/userList', ensureAuthenticated, authRole(ROLE.ADMIN), function(req, res) {
@@ -236,147 +206,42 @@ app.get("/main/sauce/:selfPage", function(req, res) {
         }
     })
 }) //! three different get's in case we have same names
-
-
-app.get("/admin",ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
-
-    dish.find({}, (err, dish) => {
-        let dishIngredients = []
-        let advancedDishIngredients = []
-        let allIngredients = []
-        for (let i = 0; i < dish.length; ++i) {
-            for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
-                dishIngredients.push(dish[i].ingredients.name[j]) 
-                allIngredients.push(dish[i].ingredients.name[j])
-            }
-        }
-        let dishUniqueIngredients = new Set(dishIngredients)
-        advancedDish.find({}, (err, advancedDish) => {
-            
-        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
-            for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
-                advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
-                allIngredients.push(advancedDish[i].ingredients.name[j])
-            }
-        }
-        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
-            for (let j = 0; j < advancedDish[i].contain.length; ++j) {
-                for(let k = 0; k < advancedDish[i].contain[j].ingredients.name.length;++k){
-                    advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
-                }
-            }
-        }
-        let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
-        let allIngredientsUnique = new Set(allIngredients)//convert to set and back to array with unique units
-        allIngredients = Array.from(allIngredientsUnique)
-        advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
-        dishIngredients = Array.from(dishUniqueIngredients)
-
-            sauce.find({}, (err, result) => {
-                for (let i = 0; i < result.length; ++i) {
-                    for (let j = 0; j < result[i].ingredients.name.length; ++j) { 
-                        allIngredients.push(result[i].ingredients.name[j])
-                    }
-                }
-                
-                res.render("admin", {
-                    sauceName: result,
-                    currentUser: req.user,
-                    dishIngredients:dishIngredients,
-                    advancedDishIngredients:advancedDishIngredients,
-                    allIngredients:allIngredients
-                });
-            })
-        })
-    })
-    
-
-
-})
-
-app.get("/table", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
-
-
-
-    dish.find((err, resDish) => {
-        advancedDish.find((err, resAdvanced) => {
-            sauce.find((err, resSauce) => {
-                res.render("table.ejs", {
-                    dish: resDish,
-                    advancedDish: resAdvanced,
-                    sauce: resSauce,
-                    currentUser: req.user
-                });
-            })
-        })
-
-    })
-
-})
-app.get("/tableToUpdate", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
-    dish.find((err, resDish) => {
-        advancedDish.find((err, resAdvanced) => {
-            sauce.find((err, resSauce) => {
-                res.render("tableToUpdate.ejs", {
-                    dish: resDish,
-                    advancedDish: resAdvanced,
-                    sauce: resSauce,
-                    currentUser: req.user
-                });
-            })
-        })
-    })
-
-})
 //!send 3 kind of dishes to main
 
 app.get("/", (req, res) => {
-    
-    
+
+
     dish.find({}, (err, dish) => {
         let dishIngredients = []
         let advancedDishIngredients = []
         let allIngredients = []
-        for (let i = 0; i < dish.length; ++i) {
-            for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
-                dishIngredients.push(dish[i].ingredients.name[j]) 
-                allIngredients.push(dish[i].ingredients.name[j])
-            }
-        }
-        let dishUniqueIngredients = new Set(dishIngredients)
+        search.dishIngredients(dish, dishIngredients)
+        search.dishIngredients(dish, allIngredients)
+
         advancedDish.find({}, (err, advancedDish) => {
-            
-        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
-            for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
-                advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
-                allIngredients.push(advancedDish[i].ingredients.name[j])
-            }
-        }
-        for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
-            for (let j = 0; j < advancedDish[i].contain.length; ++j) {
-                for(let k = 0; k < advancedDish[i].contain[j].ingredients.name.length;++k){
-                    advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
-                    allIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
-                }
-            }
-        }
-        let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
-        let allIngredientsUnique = new Set(allIngredients)//convert to set and back to array with unique units
-        allIngredients = Array.from(allIngredientsUnique)
-        advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
-        dishIngredients = Array.from(dishUniqueIngredients)
-        
+            search.dishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, allIngredients)
+            search.dishIngredients(advancedDish, allIngredients)
+
             sauce.find({}, (err, sauce) => {
-                
+                search.dishIngredients(sauce, allIngredients)
+                let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+                let allIngredientsUnique = new Set(allIngredients) //convert to set and back to array with unique units
+                let dishUniqueIngredients = new Set(dishIngredients)
+                allIngredients = Array.from(allIngredientsUnique)
+                advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+                dishIngredients = Array.from(dishUniqueIngredients)
+
                 res.render("main", {
                     dish: dish,
                     advancedDish: advancedDish,
                     sauce: sauce,
                     currentUser: req.user,
-                    dishIngredients:dishIngredients,
-                    advancedDishIngredients:advancedDishIngredients,
-                    allIngredients:allIngredients,
-                    
+                    dishIngredients: dishIngredients,
+                    advancedDishIngredients: advancedDishIngredients,
+                    allIngredients: allIngredients,
+
                 });
             })
         })
@@ -425,111 +290,124 @@ app.get("/filter-vegetables", (req, res) => {
         })
     })
 })
+
+app.get("/admin", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
+
+    dish.find({}, (err, dish) => {
+        let dishIngredients = []
+        let advancedDishIngredients = []
+        let allIngredients = []
+        search.dishIngredients(dish, dishIngredients)
+        search.dishIngredients(dish, allIngredients)
+
+        advancedDish.find({}, (err, advancedDish) => {
+            search.dishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, allIngredients)
+            search.dishIngredients(advancedDish, allIngredients)
+
+            sauce.find({}, (err, sauce) => {
+                search.dishIngredients(sauce, allIngredients)
+                let dishUniqueIngredients = new Set(dishIngredients)
+                let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+                let allIngredientsUnique = new Set(allIngredients) //convert to set and back to array with unique units
+                allIngredients = Array.from(allIngredientsUnique)
+                advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+                dishIngredients = Array.from(dishUniqueIngredients)
+
+                res.render("admin", {
+                    sauceName: sauce,
+                    currentUser: req.user,
+                    dishIngredients: dishIngredients,
+                    advancedDishIngredients: advancedDishIngredients,
+                    allIngredients: allIngredients
+                });
+            })
+        })
+    })
+})
+
+app.get("/table", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
+    dish.find((err, resDish) => {
+        advancedDish.find((err, resAdvanced) => {
+            sauce.find((err, resSauce) => {
+                res.render("table.ejs", {
+                    dish: resDish,
+                    advancedDish: resAdvanced,
+                    sauce: resSauce,
+                    currentUser: req.user
+                });
+            })
+        })
+    })
+})
+
+app.get("/tableToUpdate", ensureAuthenticated, authRole(ROLE.ADMIN), (req, res) => {
+    dish.find((err, resDish) => {
+        advancedDish.find((err, resAdvanced) => {
+            sauce.find((err, resSauce) => {
+                res.render("tableToUpdate.ejs", {
+                    dish: resDish,
+                    advancedDish: resAdvanced,
+                    sauce: resSauce,
+                    currentUser: req.user
+                });
+            })
+        })
+    })
+})
+
 app.post("/search", (req, res) => {
     let searchArr = req.body.searchIng.split(',')
     dish.find({}, (err, dish) => {
-            let dishIngredients = []
-            let advancedDishIngredients = []
-            let allIngredients = []
-            for (let i = 0; i < dish.length; ++i) {
-                for (let j = 0; j < dish[i].ingredients.name.length; ++j) {
-                    dishIngredients.push(dish[i].ingredients.name[j])
-                    allIngredients.push(dish[i].ingredients.name[j])
-                }
-            }
+        let dishIngredients = []
+        let advancedDishIngredients = []
+        let allIngredients = []
+        search.dishIngredients(dish, dishIngredients)
+        search.dishIngredients(dish, allIngredients)
+
+        advancedDish.find({}, (err, advancedDish) => {
+            search.dishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, advancedDishIngredients)
+            search.advancedDishIngredients(advancedDish, allIngredients)
+            search.dishIngredients(advancedDish, allIngredients)
             let dishUniqueIngredients = new Set(dishIngredients)
-            advancedDish.find({}, (err, advancedDish) => {
+            let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
+            let allIngredientsUnique = new Set(allIngredients) //convert to set and back to array with unique units
+            allIngredients = Array.from(allIngredientsUnique)
+            advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
+            dishIngredients = Array.from(dishUniqueIngredients)
 
-                    for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in advanced dish
-                        for (let j = 0; j < advancedDish[i].ingredients.name.length; ++j) {
-                            advancedDishIngredients.push(advancedDish[i].ingredients.name[j])
-                            allIngredients.push(advancedDish[i].ingredients.name[j])
-                        }
-                    }
-                    for (let i = 0; i < advancedDish.length; ++i) { //search for all ingredients in sauce
-                        for (let j = 0; j < advancedDish[i].contain.length; ++j) {
-                            for (let k = 0; k < advancedDish[i].contain[j].ingredients.name.length; ++k) {
-                                advancedDishIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
-                                allIngredients.push(advancedDish[i].contain[j].ingredients.name[k])
-                            }
-                        }
-                    }
-                    let advancedDishUniqueIngredients = new Set(advancedDishIngredients)
-                    let allIngredientsUnique = new Set(allIngredients) //convert to set and back to array with unique units
-                    allIngredients = Array.from(allIngredientsUnique)
-                    advancedDishIngredients = Array.from(advancedDishUniqueIngredients)
-                    dishIngredients = Array.from(dishUniqueIngredients)
+            sauce.find({}, (err, sauce) => {
+                let dishRight = [];
+                let advancedDishRight = [];
+                search.dishSearchRight(dish, dishRight, searchArr)
+                search.advancedDishSearchRight(advancedDish, advancedDishRight, searchArr) //show dishes wich have more than 50% matches
+                if (dishRight.length > 0 || advancedDishRight.length > 0) {
 
-                    sauce.find({}, (err, sauce) => {
-                            let right = 0;
-                            let rightSauce = 0
-                            let dishRight = [];
-                            let advancedDishRight = [];
+                    res.render("search.ejs", {
 
-                            for (let i = 0; i < dish.length; ++i) {
-                                let ingNameLength = dish[i].ingredients.name.length
-                                for (let j = 0; j < ingNameLength; ++j) {
-                                    for (let k = 0; k < searchArr.length; ++k) {
-                                        if (searchArr[k] === dish[i].ingredients.name[j])
-                                            ++right;
-                                    }
-                                }
-                                if (right / ingNameLength > 0.495) {
-                                    dishRight.push(dish[i])
-                                }
-                                
-                                right = 0;
-                            }
+                        searchDish: dishRight,
+                        searchAdvancedDish: advancedDishRight,
+                        currentUser: req.user,
+                        sauce: sauce
+                    });
 
-                            {
-                                for (let i = 0; i < advancedDish.length; ++i) {
-                                    let advancedIngNameLength = advancedDish[i].ingredients.name.length
-                                    for (let j = 0; j < advancedIngNameLength; ++j)
-                                        for (let m = 0; m < searchArr.length; ++m) {
-                                            if (searchArr[m] === advancedDish[i].ingredients.name[j]) {
-                                                ++right;
-                                            }
-                                            
-                                        }
-                                        let values = sauceIngPercent(advancedDish,i,searchArr)
-                                        
-                                        if  (((right+values.right)/(advancedIngNameLength+values.number))>0.495) {
-                                            advancedDishRight.push(advancedDish[i])
-                                        }
-                                   
-                                }
-                                right = 0;
-                            }
-                            
-                            if(dishRight.length > 0 || advancedDishRight.length > 0){
-                                
-                                res.render("search.ejs", {
-                                    
-                                    searchDish:dishRight,
-                                    searchAdvancedDish:advancedDishRight,
-                                    currentUser: req.user,
-                                    sauce:sauce
-                                });
-                            }else{
-                                res.render("main.ejs", {
-                                    dish: dish,
-                                    advancedDish: advancedDish,
-                                    sauce: sauce,
-                                    currentUser: req.user,
-                                    dishIngredients:dishIngredients,
-                                    advancedDishIngredients:advancedDishIngredients,
-                                    allIngredients:allIngredients,
-                                })
-                            }
-                            
-
-
-                        })
-
-                        
+                } else {
+                    res.render("main.ejs", {
+                        dish: dish,
+                        advancedDish: advancedDish,
+                        sauce: sauce,
+                        currentUser: req.user,
+                        dishIngredients: dishIngredients,
+                        advancedDishIngredients: advancedDishIngredients,
+                        allIngredients: allIngredients,
                     })
+                }
             })
+        })
     })
+})
 
 
 app.post('/', function(req, res) {
@@ -706,16 +584,13 @@ app.post("/table", (req, result) => {
                     _id: req.body.remove
                 }, (request, dishRes) => {
                     //!remove from favorite if dish deleted
-                    User.findOneAndUpdate(
-                        {
-                            favoriteDish:dishRes
+                    User.updateMany({
+                        favoriteDish: dishRes
+                    }, {
+                        $pull: {
+                            favoriteDish: dishRes
                         },
-                        {
-                            $pull: {
-                                favoriteDish: dishRes
-                            },
-                        },(disherr,dishdoc)=>{}
-                    )
+                    }, (disherr, dishdoc) => {})
                     if (fs.existsSync('./public/images/uploads/' + (dishRes.name.replace(/\s+/g, '')) + ".jpg"))
                         fs.unlinkSync('./public/images/uploads/' + (dishRes.name.replace(/\s+/g, '')) + ".jpg");
                     dish.findByIdAndDelete(req.body.remove, err => {
@@ -740,16 +615,13 @@ app.post("/table", (req, result) => {
                     _id: req.body.remove
                 }, (request, advancedDishRes) => {
                     //!remove from favorite if dish deleted
-                    User.findOneAndUpdate(
-                        {
+                    User.updateMany({
+                        favoriteAdvancedDish: advancedDishRes
+                    }, {
+                        $pull: {
                             favoriteAdvancedDish: advancedDishRes
                         },
-                        {
-                            $pull: {
-                                favoriteAdvancedDish: advancedDishRes
-                            },
-                        },(advdish,advdishdoc)=>{}
-                    )
+                    }, (advdish, advdishdoc) => {})
                     if (fs.existsSync('./public/images/uploads/' + (advancedDishRes.name.replace(/\s+/g, '')) + ".jpg"))
                         fs.unlinkSync('./public/images/uploads/' + (advancedDishRes.name.replace(/\s+/g, '')) + ".jpg");
                     advancedDish.findByIdAndDelete(req.body.remove, err => {
@@ -853,15 +725,19 @@ app.post("/register", (req, res) => {
         });
     }
 
+
     if (errors.length > 0) {
         res.render('register', {
+            currentUser: req.user,
             errors,
             name,
             email,
             password,
-            password2
+            password2,
+
         });
     } else {
+
         User.findOne({
             email: email
         }).then(user => {
@@ -869,7 +745,11 @@ app.post("/register", (req, res) => {
                 errors.push({
                     msg: 'Этот Email уже используется'
                 });
+
+
+
                 res.render('register', {
+                    currentUser: req.user,
                     errors,
                     name,
                     email,
@@ -882,7 +762,7 @@ app.post("/register", (req, res) => {
                     email,
                     password
                 });
-                if (req.body.adminCode == "admin") {
+                if (req.body.adminCode == process.env.GETADMIN_SECRET) {
                     newUser.isAdmin = true;
                     newUser.role = "admin";
                 }
@@ -922,86 +802,91 @@ app.post("/login", (req, res, next) => {
 app.post("/deleteUser", (req, res) => {
     User.deleteOne({
         email: req.body.email
-    }, () => {
+    }, (err) => {
         res.redirect("/userList")
     })
 })
 
-app.post("/main/dish/favorite",(req,res)=>{
-    
-    dish.findOne({name:req.body.name},(err,thatDish)=>{
-        User.exists({favoriteDish:thatDish},(undefined,exist)=>{
-            if(!exist){
-                User.findOneAndUpdate(
-                    {
+app.post("/main/dish/favorite", (req, res) => {
+
+    dish.findOne({
+        name: req.body.name
+    }, (err, thatDish) => {
+        User.findOne({
+            email: req.user.email
+        }, (err, user) => {
+            let favorite = false;
+            for(let i = 0; i < user.favoriteDish.length;++i){
+                if(user.favoriteDish[i].name === thatDish.name){
+                    favorite = true;
+                    User.findOneAndUpdate({
                         name:req.user.name
-                    },
-                    {
+                    }, {
+                        $pull: {
+                            favoriteDish:thatDish
+                        }
+                    }, (err,doc) => {
+                        doc.save();
+                        res.redirect("/main/dish/"+ thatDish.name)
+                    })
+                }
+            }
+            if(!favorite){
+                    User.findOneAndUpdate({
+                        name: req.user.name
+                    }, {
                         $addToSet: {
                             favoriteDish: thatDish
                         }
-                    },(err,doc)=>{
+                    }, (err, doc) => {
                         doc.save();
-                        res.redirect("/main/dish/"+thatDish.name)
-                    }
-                    )
-            }else{
-                
-                User.findOneAndUpdate(
-                    {
-                        name:req.user.name
-                    },
-                    {
-                        $pull: {
-                            favoriteDish: thatDish
-                        }
-                    },(err,doc)=>{
-                        doc.save();
-                        res.redirect("/main/dish/"+thatDish.name)
-                    }
-                    )
+                        res.redirect("/main/dish/" + thatDish.name)
+                    })
             }
 
         })
-    }) 
+    })
 })
-app.post("/main/advanced-dish/favorite",(req,res)=>{
-    
-    advancedDish.findOne({name:req.body.name},(err,thatDish)=>{
-        User.exists({favoriteAdvancedDish:thatDish},(undefined,exist)=>{
-            if(!exist){
-                
-                User.findOneAndUpdate(
-                    {
+app.post("/main/advanced-dish/favorite", (req, res) => {
+
+    advancedDish.findOne({
+        name: req.body.name
+    }, (err, thatDish) => {
+        User.findOne({
+            email: req.user.email
+        }, (err, user) => {
+            let favorite = false;
+            for(let i = 0; i < user.favoriteAdvancedDish.length;++i){
+                if(user.favoriteAdvancedDish[i].name === thatDish.name){
+                    favorite = true;
+                    User.findOneAndUpdate({
                         name:req.user.name
-                    },
-                    {
+                    }, {
+                        $pull: {
+                            favoriteAdvancedDish:thatDish
+                        }
+                    }, (err,doc) => {
+                        doc.save();
+                        res.redirect("/main/advanced-dish/"+ thatDish.name)
+                    })
+                }
+            }
+            if(!favorite){
+                    User.findOneAndUpdate({
+                        name: req.user.name
+                    }, {
                         $addToSet: {
                             favoriteAdvancedDish: thatDish
                         }
-                    },(err,doc)=>{
+                    }, (err, doc) => {
                         doc.save();
-                        res.redirect("/main/advanced-dish/"+thatDish.name)
-                    }
-                    )
-            }else{
-                
-                User.findOneAndUpdate(
-                    {
-                        name:req.user.name
-                    },
-                    {
-                        $pull: {
-                            favoriteAdvancedDish: thatDish
-                        }
-                    },(err,doc)=>{
-                        doc.save();
-                        res.redirect("/main/advanced-dish/"+thatDish.name)
-                    }
-                    )
+                        res.redirect("/main/advanced-dish/" + thatDish.name)
+                    })
             }
+
         })
-    }) 
+    })
+    
 })
 app.listen(port, () => {
     console.log("Live");

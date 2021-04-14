@@ -11,7 +11,7 @@
 <a href="/logout" class="btn btn-secondary">Выход</a>
 <% if(currentUser.isAdmin && currentUser.name != pageHolder[0].name){ %>
   <form action="/deleteUser" method="post">
-  <button type="submit" name="email" value="<%=pageHolder[0].email.toString%>">Delete User</button>
+  <button type="submit" name="email" value="<%=pageHolder[0].email%>">Delete User</button>
 </form>
 <% } %> 
 

@@ -28,7 +28,7 @@
         <div class="singleDish dish">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1"
               src="images/uploads/<%= dish[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />
@@ -66,12 +66,12 @@
         <div class="singleDish advancedDish">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1"
               src="images/uploads/<%= advancedDish[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />
             <h3 name="<%= advancedDish[i].name %>">
-              <%= advancedDish[i].name %>
+              <strong><%= advancedDish[i].name %></strong>
             </h3>
             <div class="img-description_layer">
               <h5>Пищевая ценность на 100г:</h5>
@@ -126,11 +126,11 @@
         <div class="singleDish sauce">
           <div class="img-wrap">
             <img
-              class="img-dish"
+              class="img-dish cropped1" 
               src="images/uploads/<%= sauce[i].name.replace(/\s+/g, '') %>.jpg"
               onerror="if (this.src != 'images/uploads/default.jpg') this.src = 'images/uploads/default.jpg';"
             />
-            <h3 name="<%= sauce[i].name %>"><%= sauce[i].name %></h3>
+            <h3 name="<%= sauce[i].name %>"><strong><%= sauce[i].name %></strong></h3>
             <div class="img-description_layer">
               <h5>Пищевая ценность на 100г:</h5>
               <div class="nutritionalValueDish">
